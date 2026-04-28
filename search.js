@@ -1,0 +1,1 @@
+fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://html.duckduckgo.com/html/?q=????? ??????')).then(r=>r.json()).then(d=>{const html = d.contents; const matches = [...html.matchAll(/class="result__snippet[^>]*>(.*?)<\/a>/gi)]; console.log(matches.slice(0,3).map(m=>m[1].replace(/<[^>]+>/g,'').trim()).join(' | '));}).catch(console.error)

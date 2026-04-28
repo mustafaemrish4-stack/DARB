@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-arabic: "Amiri", serif;
+
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-bright: var(--brand-bright);
+  --color-brand-green: var(--brand-green);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-black: var(--brand-black);
+  --color-brand-gold: var(--brand-gold);
+  --color-white: var(--bg-white);
+
+  --radius-4xl: 2rem;
+  --radius-5xl: 3rem;
+}
+
+:root {
+  --brand-deep: #8A1734;
+  --brand-bright: #BB2744;
+  --brand-green: #31885F;
+  --brand-cream: #FFF6EB;
+  --brand-black: #010101;
+  --brand-gold: #D4AF37;
+  --bg-white: #ffffff;
+}
+
+.dark {
+  --brand-deep: #D4AF37; /* Deep shifts to Gold */
+  --brand-bright: #e7c75c;
+  --brand-green: #31885F;
+  --brand-cream: #121212;
+  --brand-black: #EAEAEA;
+  --brand-gold: #8A1734;
+  --bg-white: #1e1e1e;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-cream text-brand-black antialiased;
+    font-family: 'Tajawal', sans-serif;
+    direction: rtl;
+    background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+.glass {
+  @apply bg-white/40 backdrop-blur-xl border border-white/30;
+}
+
+.shadow-soft {
+  box-shadow: 0 20px 40px -10px rgba(138, 23, 52, 0.08);
+}
+
+.organic-border {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

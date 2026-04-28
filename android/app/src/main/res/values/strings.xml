@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">darb</string>
+    <string name="title_activity_main">darb</string>
+    <string name="package_name">com.darb.app</string>
+    <string name="custom_url_scheme">com.darb.app</string>
+</resources>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>AR Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <style>
+      body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; font-family: sans-serif; direction: rtl; }
+      #ui-container {
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        z-index: 9999;
+        pointer-events: none;
+      }
+      .panel {
+        background: rgba(255,255,255,0.95);
+        padding: 10px;
+        border-radius: 20px;
+        display: flex;
+        gap: 10px;
+        pointer-events: auto;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        backdrop-filter: blur(5px);
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 90%;
+      }
+      .btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        border: 2px solid transparent;
+        background: #f0f0f0;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        pointer-events: auto;
+      }
+      .btn.active {
+        border-color: #A61D33;
+        background: #ffe5e5;
+        transform: scale(1.1);
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+      }
+      .control-btn {
+        width: 60px;
+        height: 40px;
+        background: #A61D33;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        pointer-events: auto;
+        cursor: pointer;
+      }
+      .control-btn:active {
+        transform: scale(0.9);
+      }
+      #ar-instructions {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 18px;
+        z-index: 9999;
+        pointer-events: none;
+        text-align: center;
+        transition: opacity 0.5s;
+      }
+      .fade-out {
+        opacity: 0;
+      }
+      .special-btn {
+        background: linear-gradient(45deg, #FFD700, #FFA500);
+        color: #000;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 15px;
+        font-weight: bold;
+        display: none;
+        pointer-events: auto;
+        box-shadow: 0 4px 15px rgba(255,215,0,0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="ui-container">
+      <div id="ar-instructions">حرك الهاتف للتعرف على الأرضية</div>
+      
+      <button id="start-train-btn" class="special-btn" onpointerdown="startTrain()">تشغيل القطار 🚂</button>
+      <button id="open-portal-btn" class="special-btn" onpointerdown="openPortal()">بوابة الأقصى 🌀</button>
+
+      <div class="panel controls">
+        <button class="control-btn" onpointerdown="rotateModel(-45)">↺ لف</button>
+        <button class="control-btn" onpointerdown="rotateModel(45)">↻ لف</button>
+        <button class="control-btn" onpointerdown="scaleModel(1.2)">+ كبر</button>
+        <button class="control-btn" onpointerdown="scaleModel(0.8)">- صغر</button>
+        <button class="control-btn" onpointerdown="clearDraw()" style="background:#333;">🗑️ مسح</button>
+      </div>
+      <div class="panel" id="model-picker">
+        <button class="btn active" title="المرشد الذكي" onpointerdown="selectModel('robot', this)">🤖</button>
+        <button class="btn" title="سكة القطار" onpointerdown="selectModel('train', this)">🛤️</button>
+        <button class="btn" title="شخص متحرك" onpointerdown="selectModel('man', this)">🏃</button>
+        <button class="btn" title="سيارة" onpointerdown="selectModel('car', this)">🚗</button>
+        <button class="btn" title="فرشاة الرسم" onpointerdown="selectModel('draw', this)">🖌️</button>
+      </div>
+    </div>
+
+    <a-scene webxr="requiredFeatures: hit-test, local-floor; optionalFeatures: dom-overlay; overlayElement: #ui-container;" renderer="colorManagement: true; alpha: true; antialias: true;">
+      
+      <a-assets>
+        <a-asset-item id="robot-model" src="/models/robot.glb"></a-asset-item>
+        <a-asset-item id="car-model" src="/models/car.glb"></a-asset-item>
+        <a-asset-item id="man-model" src="/models/cesium_man.glb"></a-asset-item>
+        <a-asset-item id="buggy-model" src="/models/buggy.glb"></a-asset-item>
+        <img id="portal-sky" src="/360/alaqsa.jpg">
+      </a-assets>
+
+      <a-entity camera look-controls></a-entity>
+      
+      <a-light type="directional" intensity="2" position="1 2 1"></a-light>
+      <a-light type="ambient" intensity="1"></a-light>
+
+      <!-- The Magic Portal Sky (Hidden by default) -->
+      <a-sky id="world-sky" src="#portal-sky" radius="50" opacity="0" visible="false"></a-sky>
+
+      <!-- Native AR Hit Test Component -->
+      <a-entity id="reticle" ar-hit-test-system visible="false">
+        <a-ring radius-inner="0.08" radius-outer="0.12" color="#A61D33" rotation="-90 0 0" opacity="0.8"></a-ring>
+        <a-circle radius="0.04" color="#A61D33" rotation="-90 0 0" opacity="0.5"></a-circle>
+      </a-entity>
+
+      <!-- Train System -->
+      <a-entity id="train-group">
+        <a-entity id="the-train" gltf-model="#buggy-model" scale="0 0 0" visible="false"></a-entity>
+      </a-entity>
+
+      <script>
+        let currentModelType = 'robot';
+        let currentEntity = null;
+        let currentRotation = 0;
+        let currentScale = 1;
+        let drawnEntities = [];
+        
+        // Train Variables
+        let trainPath = [];
+        let isTrainRunning = false;
+        let trainProgress = 0;
+
+        window.parent.postMessage({ type: 'ROBOT_SELECTED' }, '*');
+
+        window.selectModel = function(type, btnElement) {
+            currentModelType = type;
+            document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            
+            if (type === 'robot') {
+                window.parent.postMessage({ type: 'ROBOT_SELECTED' }, '*');
+            } else {
+                window.parent.postMessage({ type: 'ROBOT_DESELECTED' }, '*');
+            }
+
+            let inst = document.getElementById('ar-instructions');
+            inst.classList.remove('fade-out');
+
+            if(type === 'draw') {
+                currentEntity = null;
+                inst.innerText = 'المس الشاشة لترسم بحرية!';
+            } else if(type === 'train') {
+                currentEntity = null;
+                inst.innerText = 'المس الأرض لرسم نقاط مسار القطار';
+                if(trainPath.length > 1) document.getElementById('start-train-btn').style.display = 'block';
+            } else {
+                document.getElementById('start-train-btn').style.display = 'none';
+                inst.innerText = 'اضغط على السطح للوضع أو النقل';
+                if(currentEntity) updateModelShape(currentEntity);
+            }
+            
+            setTimeout(() => { inst.classList.add('fade-out'); }, 3000);
+        };
+
+        window.rotateModel = function(deg) {
+            if(!currentEntity) return;
+            currentRotation += deg;
+            currentEntity.setAttribute('animation__rot', `property: rotation; to: 0 ${currentRotation} 0; dur: 300; easing: easeOutQuad`);
+        };
+
+        window.scaleModel = function(factor) {
+            if(!currentEntity) return;
+            currentScale *= factor;
+            currentEntity.setAttribute('animation__scale', `property: scale; to: ${currentScale} ${currentScale} ${currentScale}; dur: 300; easing: easeOutQuad`);
+        };
+
+        window.clearDraw = function() {
+            drawnEntities.forEach(el => el.parentNode.removeChild(el));
+            drawnEntities = [];
+            trainPath = [];
+            document.getElementById('start-train-btn').style.display = 'none';
+            document.getElementById('open-portal-btn').style.display = 'none';
+            document.getElementById('the-train').setAttribute('visible', 'false');
+            isTrainRunning = false;
+
+            if (currentEntity && currentModelType !== 'draw' && currentModelType !== 'train') {
+                currentEntity.parentNode.removeChild(currentEntity);
+                currentEntity = null;
+                currentScale = 1;
+            }
+            
+            // Close portal if open
+            document.getElementById('world-sky').setAttribute('animation', `property: opacity; to: 0; dur: 1000`);
+            setTimeout(() => { document.getElementById('world-sky').setAttribute('visible', 'false'); }, 1000);
+        };
+
+        window.startTrain = function() {
+            if(trainPath.length < 2) return;
+            isTrainRunning = true;
+            trainProgress = 0;
+            let train = document.getElementById('the-train');
+            train.setAttribute('visible', 'true');
+            train.setAttribute('scale', '0.02 0.02 0.02'); // Buggy model is huge
+            train.setAttribute('position', `${trainPath[0].x} ${trainPath[0].y} ${trainPath[0].z}`);
+            document.getElementById('start-train-btn').style.display = 'none';
+            document.getElementById('open-portal-btn').style.display = 'block';
+        };
+
+        window.openPortal = function() {
+            let sky = document.getElementById('world-sky');
+            sky.setAttribute('visible', 'true');
+            sky.setAttribute('animation', `property: opacity; to: 1; dur: 2000`);
+            document.getElementById('open-portal-btn').style.display = 'none';
+        };
+
+        function updateModelShape(el) {
+            el.innerHTML = '';
+            let modelNode = document.createElement('a-entity');
+            
+            if(currentModelType === 'robot') {
+                modelNode.setAttribute('gltf-model', '#robot-model');
+                modelNode.setAttribute('animation-mixer', 'clip: *'); 
+                let textNode = document.createElement('a-text');
+                textNode.setAttribute('id', 'robot-speech-bubble');
+                textNode.setAttribute('value', 'أنا المرشد الذكي!\\nمرحباً بك في درب');
+                textNode.setAttribute('position', '0 1.5 0');
+                textNode.setAttribute('align', 'center');
+                textNode.setAttribute('color', '#A61D33');
+                textNode.setAttribute('width', '3');
+                modelNode.appendChild(textNode);
+            } else if(currentModelType === 'car') {
+                modelNode.setAttribute('gltf-model', '#car-model');
+            } else if(currentModelType === 'man') {
+                modelNode.setAttribute('gltf-model', '#man-model');
+                modelNode.setAttribute('animation-mixer', 'clip: *'); // Play walk animation
+                modelNode.setAttribute('scale', '0.5 0.5 0.5');
+            }
+            el.appendChild(modelNode);
+        }
+
+        window.addEventListener('message', (e) => {
+            let bubble = document.getElementById('robot-speech-bubble');
+            if (!bubble) return;
+            
+            if (e.data.type === 'AI_THINKING') {
+                bubble.setAttribute('value', 'يفكر...');
+            } else if (e.data.type === 'AI_REPLY') {
+                let text = e.data.text;
+                if (text.length > 30) {
+                    text = text.match(/.{1,30}/g)?.join('\\n') || text;
+                }
+                bubble.setAttribute('value', text);
+            }
+        });
+
+        // Train Animation Loop
+        setInterval(() => {
+            if(!isTrainRunning || trainPath.length < 2) return;
+            
+            let train = document.getElementById('the-train');
+            trainProgress += 0.02; // speed
+            if(trainProgress >= trainPath.length - 1) {
+                trainProgress = 0; // loop
+            }
+            
+            let i = Math.floor(trainProgress);
+            let nextI = i + 1;
+            let ratio = trainProgress - i;
+            
+            let p1 = trainPath[i];
+            let p2 = trainPath[nextI];
+            
+            let x = p1.x + (p2.x - p1.x) * ratio;
+            let y = p1.y + (p2.y - p1.y) * ratio;
+            let z = p1.z + (p2.z - p1.z) * ratio;
+            
+            train.setAttribute('position', `${x} ${y} ${z}`);
+            
+            // Look at next point
+            let dx = p2.x - p1.x;
+            let dz = p2.z - p1.z;
+            let angle = Math.atan2(dx, dz) * (180 / Math.PI);
+            train.setAttribute('rotation', `0 ${angle} 0`);
+        }, 30);
+
+        AFRAME.registerComponent('ar-hit-test-system', {
+          init: function () {
+            this.xrHitTestSource = null;
+            this.viewerSpace = null;
+            this.refSpace = null;
+            this.sceneEl = this.el.sceneEl;
+
+            this.sceneEl.renderer.xr.addEventListener('sessionstart', () => {
+              let session = this.sceneEl.renderer.xr.getSession();
+              let inst = document.getElementById('ar-instructions');
+              inst.innerText = 'جاري البحث عن مساحة...';
+              inst.classList.remove('fade-out');
+
+              session.requestReferenceSpace('viewer').then((space) => {
+                this.viewerSpace = space;
+                session.requestHitTestSource({ space: this.viewerSpace }).then((source) => {
+                  this.xrHitTestSource = source;
+                });
+              });
+              session.requestReferenceSpace('local-floor').then((space) => {
+                this.refSpace = space;
+              });
+            });
+
+            this.sceneEl.addEventListener('touchstart', (e) => {
+               if(e.target.closest('#ui-container')) return;
+               if(!this.el.getAttribute('visible')) return;
+
+               const pos = this.el.getAttribute('position');
+
+               if(currentModelType === 'draw') {
+                   let paint = document.createElement('a-sphere');
+                   const colors = ['#A61D33', '#FFD700', '#31885F', '#1E90FF'];
+                   paint.setAttribute('color', colors[Math.floor(Math.random() * colors.length)]);
+                   paint.setAttribute('radius', '0.03');
+                   paint.setAttribute('position', Object.assign({}, pos));
+                   paint.setAttribute('scale', '0 0 0');
+                   paint.setAttribute('animation__spawn', 'property: scale; to: 1 1 1; dur: 300; easing: easeOutElastic');
+                   this.sceneEl.appendChild(paint);
+                   drawnEntities.push(paint);
+               } else if(currentModelType === 'train') {
+                   // Place Track Node
+                   let trackNode = document.createElement('a-box');
+                   trackNode.setAttribute('color', '#8B4513');
+                   trackNode.setAttribute('depth', '0.1');
+                   trackNode.setAttribute('height', '0.02');
+                   trackNode.setAttribute('width', '0.2');
+                   trackNode.setAttribute('position', Object.assign({}, pos));
+                   
+                   // calculate rotation to face previous node
+                   if(trainPath.length > 0) {
+                       let prev = trainPath[trainPath.length - 1];
+                       let dx = pos.x - prev.x;
+                       let dz = pos.z - prev.z;
+                       let angle = Math.atan2(dx, dz) * (180 / Math.PI);
+                       trackNode.setAttribute('rotation', `0 ${angle + 90} 0`);
+                   }
+
+                   this.sceneEl.appendChild(trackNode);
+                   drawnEntities.push(trackNode);
+                   trainPath.push(Object.assign({}, pos));
+                   
+                   if(trainPath.length > 1) document.getElementById('start-train-btn').style.display = 'block';
+                   
+               } else {
+                   if(!currentEntity) {
+                       currentEntity = document.createElement('a-entity');
+                       updateModelShape(currentEntity);
+                       currentEntity.setAttribute('position', Object.assign({}, pos));
+                       currentEntity.setAttribute('scale', '0 0 0');
+                       currentEntity.setAttribute('animation__spawn', 'property: scale; to: 1 1 1; dur: 500; easing: easeOutElastic');
+                       this.sceneEl.appendChild(currentEntity);
+                       document.getElementById('ar-instructions').classList.add('fade-out');
+                   } else {
+                       currentEntity.setAttribute('animation__move', `property: position; to: ${pos.x} ${pos.y} ${pos.z}; dur: 800; easing: easeOutQuad`);
+                   }
+               }
+            });
+          },
+          tick: function () {
+            if (this.sceneEl.is('ar-mode')) {
+              if (!this.xrHitTestSource || !this.refSpace) return;
+              let frame = this.sceneEl.frame;
+              if (!frame) return;
+              let hitTestResults = frame.getHitTestResults(this.xrHitTestSource);
+              if (hitTestResults.length > 0) {
+                let pose = hitTestResults[0].getPose(this.refSpace);
+                this.el.setAttribute('position', pose.transform.position);
+                this.el.setAttribute('visible', true);
+                
+                let inst = document.getElementById('ar-instructions');
+                if (inst.innerText === 'جاري البحث عن مساحة...') {
+                    inst.innerText = 'تم! اضغط لوضع المجسم';
+                    setTimeout(() => { inst.classList.add('fade-out'); }, 3000);
+                }
+              } else {
+                this.el.setAttribute('visible', false);
+              }
+            }
+          }
+        });
+      </script>
+    </a-scene>
+  </body>
+</html>

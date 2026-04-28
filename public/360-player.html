@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>360 Player</title>
+    <!-- Use stable A-Frame version -->
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <style>
+      body, html { 
+        margin: 0; padding: 0; width: 100%; height: 100%; 
+        overflow: hidden; background: #000; touch-action: none;
+        font-family: sans-serif;
+      }
+      #play-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px 40px;
+        font-size: 24px;
+        background-color: #8A1734;
+        color: white;
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+        z-index: 9999;
+        font-family: sans-serif;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      }
+      #mute-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border: 2px solid white;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Play button overlay required for mobile browsers to allow video playback -->
+    <button id="play-btn">▶ تشغيل الآن</button>
+    <button id="mute-btn">🔊</button>
+
+    <a-scene 
+      loading-screen="dotsColor: white; backgroundColor: black" 
+      vr-mode-ui="enabled: true"
+      device-orientation-permission-ui="enabled: true"
+    >
+      <a-assets>
+        <video 
+          id="vid" 
+          loop 
+          playsinline 
+          webkit-playsinline 
+          crossorigin="anonymous"
+        ></video>
+      </a-assets>
+
+      <a-videosphere src="#vid" rotation="0 -90 0"></a-videosphere>
+      <a-entity camera look-controls="mouseEnabled: true; reverseMouseDrag: true; touchEnabled: true"></a-entity>
+    </a-scene>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const vidSrc = urlParams.get('video');
+      const video = document.getElementById('vid');
+      const playBtn = document.getElementById('play-btn');
+      const muteBtn = document.getElementById('mute-btn');
+
+      if (vidSrc) {
+        video.src = vidSrc;
+        video.load();
+      }
+
+      playBtn.addEventListener('click', () => {
+        video.play().then(() => {
+          playBtn.style.display = 'none';
+          muteBtn.style.display = 'flex';
+        }).catch(err => {
+          console.error("Playback failed:", err);
+        });
+      });
+
+      muteBtn.addEventListener('click', () => {
+        video.muted = !video.muted;
+        muteBtn.textContent = video.muted ? '🔇' : '🔊';
+      });
+
+      // Try autoplay (might work on desktop)
+      video.play().then(() => {
+        playBtn.style.display = 'none';
+      }).catch(e => {
+        // Autoplay blocked, wait for user click
+      });
+    </script>
+  </body>
+</html>
