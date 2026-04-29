@@ -1,0 +1,761 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Default Dark Theme */
+  --bg-primary: #111111;
+  --bg-card: #1a1a1a;
+  --bg-secondary: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border-color: #333333;
+  --accent: #00f298;
+  /* Green */
+  --accent-text: #000000;
+}
+
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-card: #f3f4f6;
+  --bg-secondary: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --border-color: #e5e7eb;
+  --accent: #059669;
+  /* Darker Green for light mode contrast */
+  --accent-text: #ffffff;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Nav */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+nav ul {
+  display: flex;
+  gap: 3rem;
+  list-style: none;
+}
+
+nav a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+nav a:hover,
+nav a.active {
+  color: var(--accent);
+}
+
+/* Hero */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  /* Space for nav */
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.hero-text h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.hero-text h1 {
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.hero-text .role {
+  color: var(--accent);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.social-icon {
+  width: 45px;
+  height: 45px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.social-icon:hover {
+  background: var(--accent);
+  color: var(--accent-text);
+  transform: translateY(-5px);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 12px 35px;
+  border-radius: 30px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 0 0 20px rgba(0, 242, 152, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(0, 242, 152, 0.6);
+}
+
+.hero-image-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.hero-image {
+  width: 100%;
+  max-width: 450px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  /* Perfect Circle */
+  border: 5px solid var(--border-color);
+  box-shadow: 0 0 30px rgba(0, 242, 152, 0.2);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  background: var(--bg-card);
+}
+
+.hero-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 50px rgba(0, 242, 152, 0.4);
+}
+
+/* Modal for Skills */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  padding: 2.5rem;
+  border-radius: 24px;
+  border: 1px solid var(--accent);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+  transform: scale(0.9);
+  animation: scaleUp 0.3s forwards;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.skill-icon-large {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: var(--accent);
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-image {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
+
+  .hero-text h1 {
+    font-size: 2.5rem;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  nav ul {
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Section styling to match */
+section {
+  padding: 100px 0;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: white;
+}
+
+.section-title span {
+  color: var(--accent);
+}
+
+/* Cards (Projects/Skills) dark theme */
+.card-dark {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: 20px;
+  transition: transform 0.3s, background-color 0.3s;
+  border: 1px solid var(--border-color);
+}
+
+.card-dark:hover {
+  transform: translateY(-10px);
+}
+
+.skill-tag {
+  background: rgba(0, 242, 152, 0.1);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 5px 15px;
+  border-radius: 20px;
+  display: inline-block;
+  margin: 5px;
+  font-size: 0.9rem;
+}
+
+/* Hacker Mode Overlay */
+.hacker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #0f0;
+  font-family: 'Courier New', Courier, monospace;
+  overflow: hidden;
+}
+
+.matrix-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+}
+
+.hacker-content {
+  text-align: center;
+  z-index: 2;
+  border: 2px solid #0f0;
+  padding: 3rem;
+  background: rgba(0, 20, 0, 0.9);
+  box-shadow: 0 0 50px #0f0;
+  max-width: 600px;
+  width: 90%;
+}
+
+.glitch-text {
+  font-size: 3rem;
+  font-weight: bold;
+  color: red;
+  text-shadow: 2px 2px #0f0;
+  animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+}
+
+.code-stream {
+  text-align: left;
+  margin: 2rem 0;
+  height: 150px;
+  overflow: hidden;
+  color: #0f0;
+  font-size: 1.2rem;
+}
+
+.pulse-icon {
+  animation: pulse-red 0.5s infinite alternate;
+  margin-bottom: 1rem;
+}
+
+.shake-icon {
+  animation: glitch-anim 0.3s infinite;
+  display: inline-block;
+  color: #0f0;
+}
+
+.access-granted {
+  margin-top: 2rem;
+  border-top: 1px dashed #0f0;
+  padding-top: 1rem;
+  color: #0f0;
+  animation: blink 0.5s infinite;
+}
+
+@keyframes pulse-red {
+  from {
+    color: red;
+    transform: scale(1);
+    text-shadow: 0 0 10px red;
+  }
+
+  to {
+    color: darkred;
+    transform: scale(1.2);
+    text-shadow: 0 0 30px red;
+  }
+}
+
+@keyframes glitch-skew {
+  0% {
+    transform: skew(0deg);
+  }
+
+  20% {
+    transform: skew(-10deg);
+  }
+
+  40% {
+    transform: skew(10deg);
+  }
+
+  60% {
+    transform: skew(-5deg);
+  }
+
+  80% {
+    transform: skew(5deg);
+  }
+
+  100% {
+    transform: skew(0deg);
+  }
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* --- Unique Skill Effects --- */
+
+/* 1. Matrix/Code Effect (Green) */
+.effect-matrix-bg {
+  background-color: black !important;
+  background-image:
+    linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.effect-matrix-bg::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom,
+      transparent,
+      rgba(0, 255, 152, 0.2),
+      transparent);
+  animation: scanline 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanline {
+  0% {
+    top: -100%;
+  }
+
+  100% {
+    top: 100%;
+  }
+}
+
+.effect-matrix-content {
+  border: 2px solid #00f298 !important;
+  box-shadow: 0 0 30px rgba(0, 242, 152, 0.5), inset 0 0 15px rgba(0, 242, 152, 0.2) !important;
+  color: #00f298 !important;
+  font-family: 'Courier New', monospace;
+  background: rgba(0, 15, 10, 0.95) !important;
+}
+
+
+/* 2. Cyber/Neon Effect (Cyan/Blue) */
+.effect-cyber-bg {
+  background: radial-gradient(circle at center, #001a1a 0%, black 100%);
+}
+
+.effect-cyber-bg::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-conic-gradient(from 0deg, transparent 0deg, transparent 10deg, rgba(0, 255, 255, 0.1) 10deg, rgba(0, 255, 255, 0.1) 20deg);
+  animation: rotate 20s linear infinite;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.effect-cyber-content {
+  border: 2px solid cyan !important;
+  box-shadow: 0 0 40px cyan, inset 0 0 20px cyan !important;
+  color: cyan !important;
+  background: rgba(0, 20, 30, 0.9) !important;
+}
+
+@keyframes rotate {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+
+/* 3. Fire/Magma Effect (Orange/Red) */
+.effect-fire-bg {
+  background: black;
+  background-image: radial-gradient(circle, #330000 0%, black 70%);
+}
+
+.effect-fire-content {
+  border: 2px solid #ff4500 !important;
+  box-shadow: 0 0 40px #ff4500, 0 0 10px yellow !important;
+  color: #ff9d00 !important;
+  background: rgba(40, 0, 0, 0.9) !important;
+  animation: pulse-fire 2s infinite;
+}
+
+@keyframes pulse-fire {
+  0% {
+    box-shadow: 0 0 20px #ff4500;
+  }
+
+  50% {
+    box-shadow: 0 0 60px #ff4500;
+  }
+
+  100% {
+    box-shadow: 0 0 20px #ff4500;
+  }
+}
+
+
+/* 4. Galaxy/Cosmic Effect (Purple/Pink) */
+.effect-galaxy-bg {
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  overflow: hidden;
+}
+
+.effect-galaxy-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0, 0, 0, 0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0, 0, 0, 0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: stars 4s infinite linear;
+  opacity: 0.5;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.effect-galaxy-content {
+  border: 2px solid #bc13fe !important;
+  box-shadow: 0 0 30px #bc13fe !important;
+  color: #e0aaff !important;
+  background: rgba(20, 0, 30, 0.9) !important;
+}
+
+@keyframes stars {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-200px);
+  }
+}
+
+/* Experience Monitor Styles */
+.monitor-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #333;
+  border-radius: 20px;
+  box-shadow: 0 0 0 10px #555, 0 0 50px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.monitor-screen {
+  background: black;
+  border-radius: 10px;
+  padding: 40px;
+  height: 500px;
+  /* Fixed height with scroll */
+  overflow-y: auto;
+  position: relative;
+  border: 2px solid var(--accent);
+  box-shadow: inset 0 0 20px rgba(0, 242, 152, 0.2);
+}
+
+/* Custom Scrollbar for Monitor */
+.monitor-screen::-webkit-scrollbar {
+  width: 8px;
+}
+
+.monitor-screen::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+.monitor-screen::-webkit-scrollbar-track {
+  background: #111;
+}
+
+/* Timeline Styles */
+.timeline {
+  position: relative;
+  border-left: 2px solid var(--accent);
+  margin-left: 20px;
+  padding-left: 40px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 50px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -49px;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  background: var(--bg-card);
+  border: 4px solid var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.timeline-year {
+  font-family: monospace;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.timeline-content h3 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.timeline-content p {
+  color: #ccc;
+  line-height: 1.6;
+}
+
+/* Scanline Effect */
+.monitor-screen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.6;
+}
+
+
+/* Infinite Marquee Styles */
+.marquee-container {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: scroll 60s linear infinite;
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 12px 30px;
+  border-radius: 30px;
+  margin: 0 40px;
+  color: var(--text-primary);
+  border: 1px solid var(--accent);
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
