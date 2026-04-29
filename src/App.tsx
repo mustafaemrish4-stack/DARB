@@ -1341,7 +1341,7 @@ export default function App() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setIsDailyChallengeOpen(true)} // using isDailyChallengeOpen for AR since it opens ARExperience
+                  onClick={() => window.location.href = '/ar-experience.html'} 
                   className="bg-brand-deep rounded-[2.5rem] p-8 shadow-xl border border-brand-deep/5 flex items-center gap-6 text-right cursor-pointer group relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
