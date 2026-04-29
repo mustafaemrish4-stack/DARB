@@ -654,8 +654,8 @@ const MapComponent = ({ onStartTour }: { onStartTour: (place: any) => void }) =>
       pos: [32.0517, 34.7500], 
       desc: 'عروس البحر ومدينة البرتقال.',
       photos: [
-        'https://images.unsplash.com/photo-1591185458000-bc5244510091?q=80&w=1024',
-        'https://images.unsplash.com/photo-1551842888-06cc0de34ce1?q=80&w=1024'
+        '/assets/jaffa.jpg',
+        '/assets/jaffa.jpg'
       ],
       tour: { name: 'ميناء يافا', lat: 32.0517, lng: 34.7500, heading: 180 }
     },
@@ -664,8 +664,7 @@ const MapComponent = ({ onStartTour }: { onStartTour: (place: any) => void }) =>
       pos: [32.7940, 34.9896], 
       desc: 'عروس الكرمل وجمال الطبيعة.',
       photos: [
-        'https://images.unsplash.com/photo-1563838421835-2ee8e30b6289?q=80&w=1024',
-        'https://images.unsplash.com/photo-1629807481267-3d96924e2cc8?q=80&w=1024'
+        '/assets/jaffa.jpg'
       ],
       tour: { name: 'جبل الكرمل', lat: 32.7940, lng: 34.9896, heading: 0 }
     },
@@ -674,7 +673,7 @@ const MapComponent = ({ onStartTour }: { onStartTour: (place: any) => void }) =>
       pos: [32.2211, 35.2544], 
       desc: 'دمشق الصغرى ومدينة الكنافة.',
       photos: [
-        'https://images.unsplash.com/photo-1541410965313-d53b3c16ef17?q=80&w=1024'
+        '/assets/jerusalem.jpg'
       ],
       tour: { name: 'نابلس القديمة', lat: 32.2211, lng: 35.2544, heading: 0 }
     },
@@ -683,7 +682,7 @@ const MapComponent = ({ onStartTour }: { onStartTour: (place: any) => void }) =>
       pos: [31.5017, 34.4667], 
       desc: 'مدينة العزة والصمود.',
       photos: [
-        'https://images.unsplash.com/photo-1587843640243-c0d12e6bd7ea?q=80&w=1024'
+        '/assets/jaffa.jpg'
       ],
       tour: { name: 'غزة البحر', lat: 31.5017, lng: 34.4667, heading: 0 }
     },
@@ -923,10 +922,10 @@ export default function App() {
   }, [isDarkMode]);
 
   const experiences = [
-    { id: 1, title: 'جولة القدس 360', type: 'VR 360', image: 'https://images.unsplash.com/photo-1548231264-58a4df45eab0?q=80&w=1024', img: 'jerusalem', is360: true },
-    { id: 2, title: 'نابلس 360', type: 'VR 360', image: 'https://images.unsplash.com/photo-1541410965313-d53b3c16ef17?q=80&w=1024', img: 'nablus', is360: true },
-    { id: 3, title: 'يافا 360', type: 'VR 360', image: 'https://images.unsplash.com/photo-1594950669298-21d98fa6a8b1?q=80&w=1024', img: 'jaffa', is360: true },
-    { id: 4, title: 'فيديو 360 (طبيعة وفضاء)', type: 'VR Video', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', img: 'nature', is360: true }
+    { id: 1, title: 'جولة القدس 360', type: 'VR 360', image: '/assets/jerusalem.jpg', img: 'jerusalem', is360: true },
+    { id: 2, title: 'نابلس 360', type: 'VR 360', image: '/assets/jerusalem.jpg', img: 'nablus', is360: true },
+    { id: 3, title: 'يافا 360', type: 'VR 360', image: '/assets/jaffa.jpg', img: 'jaffa', is360: true },
+    { id: 4, title: 'فيديو 360 (طبيعة وفضاء)', type: 'VR Video', video: '/assets/vr_video.mp4', img: 'nature', is360: true }
   ];
 
   if (currentView === 'auth') {

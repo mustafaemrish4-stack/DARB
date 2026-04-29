@@ -16,38 +16,38 @@ export const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, in
       name: 'القدس',
       type: 'city',
       subPlaces: [
-        { name: 'القدس (بانوراما)', image: 'https://images.unsplash.com/photo-1548231264-58a4df45eab0?q=80&w=1024', is360: false },
-        { name: 'البلدة القديمة', image: 'https://images.unsplash.com/photo-1594950669298-21d98fa6a8b1?q=80&w=1024', is360: false }
+        { name: 'القدس (بانوراما)', image: '/assets/jerusalem.jpg', is360: false },
+        { name: 'البلدة القديمة', image: '/assets/jerusalem.jpg', is360: false }
       ]
     },
     {
       name: 'يافا',
       type: 'city',
       subPlaces: [
-        { name: 'ميناء يافا', image: 'https://images.unsplash.com/photo-1591185458000-bc5244510091?q=80&w=1024', is360: false },
-        { name: 'بحر يافا', image: 'https://images.unsplash.com/photo-1551842888-06cc0de34ce1?q=80&w=1024', is360: false }
+        { name: 'ميناء يافا', image: '/assets/jaffa.jpg', is360: false },
+        { name: 'بحر يافا', image: '/assets/jaffa.jpg', is360: false }
       ]
     },
     {
       name: 'غزة',
       type: 'city',
       subPlaces: [
-        { name: 'شاطئ غزة', image: 'https://images.unsplash.com/photo-1629807481267-3d96924e2cc8?q=80&w=1024', is360: false },
-        { name: 'ميناء غزة', image: 'https://images.unsplash.com/photo-1587843640243-c0d12e6bd7ea?q=80&w=1024', is360: false }
+        { name: 'شاطئ غزة', image: '/assets/jaffa.jpg', is360: false },
+        { name: 'ميناء غزة', image: '/assets/jaffa.jpg', is360: false }
       ]
     },
     {
       name: 'نابلس',
       type: 'city',
       subPlaces: [
-        { name: 'جبال نابلس', image: 'https://images.unsplash.com/photo-1541410965313-d53b3c16ef17?q=80&w=1024', is360: false }
+        { name: 'جبال نابلس', image: '/assets/jerusalem.jpg', is360: false }
       ]
     },
     {
       name: 'جنين',
       type: 'city',
       subPlaces: [
-        { name: 'سهل مرج بن عامر', image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1024', is360: false }
+        { name: 'سهل مرج بن عامر', image: '/assets/jerusalem.jpg', is360: false }
       ]
     }
   ];
