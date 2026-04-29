@@ -497,12 +497,12 @@ const MemoryGame = ({ onClose }: { onClose: () => void }) => {
 
   const startNewGame = () => {
     const items = [
-      { label: 'سوسنة فقوعة', icon: '🏵️' },
-      { label: 'نفق بلعمة', icon: '🏛️' },
-      { label: 'عرق زيتون', icon: '🌿' },
-      { label: 'صحن زعتر', icon: '🧆' },
-      { label: 'شقائق النعمان', icon: '🌺' },
-      { label: 'تطريز تراثي', icon: '🪡' }
+      { label: 'ديناصور', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f996.svg' },
+      { label: 'صاروخ فضاء', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f680.svg' },
+      { label: 'أسد شجاع', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f981.svg' },
+      { label: 'روبوت ذكي', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f916.svg' },
+      { label: 'غواصة', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f6a8.svg' },
+      { label: 'بالون سحري', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f388.svg' }
     ];
     const deck = [...items, ...items]
       .sort(() => Math.random() - 0.5)
@@ -614,7 +614,6 @@ const MemoryGame = ({ onClose }: { onClose: () => void }) => {
                     <DarbFlower className="w-1/2 h-1/2 opacity-50 grayscale" />
                   </div>
                   
-                  {/* Back (Revealed state) */}
                   <div 
                     className={cn(
                       "absolute inset-0 bg-white rounded-2xl shadow-xl flex items-center justify-center text-4xl backface-hidden",
@@ -622,7 +621,7 @@ const MemoryGame = ({ onClose }: { onClose: () => void }) => {
                     )}
                     style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
                   >
-                    {card.icon}
+                    {card.icon.startsWith('http') ? <img src={card.icon} alt="" className="w-1/2 h-1/2 object-contain" /> : card.icon}
                   </div>
                 </motion.div>
               </motion.button>
@@ -1121,9 +1120,10 @@ export default function App() {
                   onClick={() => setIsRatingOpen(true)}
                 />
                 <ActionButton 
-                  label="تطبيقات أخرى" 
-                  icon={Settings} 
-                  color="bg-gradient-to-br from-orange-400 to-orange-500" 
+                  label="تهويدة درب" 
+                  icon={Moon} 
+                  color="bg-gradient-to-br from-indigo-500 to-purple-600" 
+                  onClick={() => setIsLullabiesOpen(true)}
                 />
               </div>
 

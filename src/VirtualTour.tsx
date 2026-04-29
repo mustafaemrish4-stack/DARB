@@ -16,46 +16,38 @@ export const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, in
       name: 'القدس',
       type: 'city',
       subPlaces: [
-        { name: 'القدس (صورة 1)', image: '/360/jerusalem.jpg', is360: true },
-        { name: 'القدس (صورة 2)', image: '/360/jerusalem.jpg', is360: true },
-        { name: 'القدس (صورة 3)', image: '/360/jerusalem.jpg', is360: true },
-      ]
-    },
-    {
-      name: 'المسجد الأقصى',
-      type: 'city',
-      subPlaces: [
-        { name: 'الأقصى (صورة)', image: '/360/alaqsa.jpg', is360: true },
-        { name: 'الأقصى (فيديو)', video: '/videos/alaqsa.mp4', is360: true },
+        { name: 'القدس (بانوراما)', image: 'https://images.unsplash.com/photo-1548231264-58a4df45eab0?q=80&w=1024', is360: false },
+        { name: 'البلدة القديمة', image: 'https://images.unsplash.com/photo-1594950669298-21d98fa6a8b1?q=80&w=1024', is360: false }
       ]
     },
     {
       name: 'يافا',
       type: 'city',
       subPlaces: [
-        { name: 'يافا 360', image: '/360/jaffa.jpg', is360: true }
+        { name: 'ميناء يافا', image: 'https://images.unsplash.com/photo-1591185458000-bc5244510091?q=80&w=1024', is360: false },
+        { name: 'بحر يافا', image: 'https://images.unsplash.com/photo-1551842888-06cc0de34ce1?q=80&w=1024', is360: false }
       ]
     },
     {
       name: 'غزة',
       type: 'city',
       subPlaces: [
-        { name: 'غزة (عادية 1)', image: '/360/gaza.jpg', is360: false },
-        { name: 'غزة (عادية 2)', image: '/360/gaza.jpg', is360: false },
+        { name: 'شاطئ غزة', image: 'https://images.unsplash.com/photo-1629807481267-3d96924e2cc8?q=80&w=1024', is360: false },
+        { name: 'ميناء غزة', image: 'https://images.unsplash.com/photo-1587843640243-c0d12e6bd7ea?q=80&w=1024', is360: false }
       ]
     },
     {
       name: 'نابلس',
       type: 'city',
       subPlaces: [
-        { name: 'نابلس (عادية)', image: '/360/nablus.jpg', is360: false }
+        { name: 'جبال نابلس', image: 'https://images.unsplash.com/photo-1541410965313-d53b3c16ef17?q=80&w=1024', is360: false }
       ]
     },
     {
       name: 'جنين',
       type: 'city',
       subPlaces: [
-        { name: 'جنين (عادية)', image: '/360/jenin.jpg', is360: false }
+        { name: 'سهل مرج بن عامر', image: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?q=80&w=1024', is360: false }
       ]
     }
   ];

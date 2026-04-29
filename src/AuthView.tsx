@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogIn, UserPlus, Mail, Lock, AlertCircle, ChevronLeft, ShieldCheck } from 'lucide-react';
+import { LogIn, UserPlus, Mail, Lock, AlertCircle, ChevronLeft, ShieldCheck, Users, Gamepad2 } from 'lucide-react';
 import { auth, googleProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from './lib/firebase';
 
 interface AuthViewProps {
@@ -108,25 +108,30 @@ export const AuthView = ({ onLoginSuccess }: AuthViewProps) => {
           >
             <button 
               onClick={() => { setSelectedRole('parent'); setStep('login'); }}
-              className="bg-white p-6 rounded-[2rem] border-2 border-transparent hover:border-brand-deep shadow-soft transition-all text-center group"
+              className="relative overflow-hidden bg-white p-8 rounded-[2.5rem] border-2 border-brand-deep/10 hover:border-brand-deep shadow-soft transition-all text-center group"
             >
-              <div className="flex justify-center mb-4 group-hover:scale-110 transition-transform h-16">
-                <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f468-200d-1f469-200d-1f467-200d-1f466.svg" alt="عائلة" className="h-full" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-brand-gold/20 to-transparent rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
+              <div className="relative flex flex-col items-center">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-brand-deep to-[#7a4855] text-white flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-transform shadow-lg">
+                  <Users size={40} />
+                </div>
+                <h2 className="text-3xl font-bold text-brand-deep mb-2">أنا ولي الأمر</h2>
+                <span className="text-sm text-brand-black/50 font-bold bg-brand-deep/5 px-4 py-1.5 rounded-full">متابعة الأداء والتحكم</span>
               </div>
-              <h2 className="text-2xl font-bold text-brand-deep mb-1">أنا ولي الأمر</h2>
-              <span className="text-xs text-brand-black/40 font-bold">متابعة وتحكم</span>
             </button>
 
             <button 
               onClick={() => { setSelectedRole('child'); setStep('login'); }}
-              className="bg-[#E6F4EA] p-6 rounded-[2rem] border-2 border-[#31885F] shadow-soft transition-all text-center group"
+              className="relative overflow-hidden bg-[#F2FAF5] p-8 rounded-[2.5rem] border-2 border-[#31885F]/20 hover:border-[#31885F] shadow-soft transition-all text-center group mt-2"
             >
-              <div className="flex justify-center gap-1 mb-4 group-hover:scale-110 transition-transform h-16">
-                <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f467.svg" alt="طفلة" className="h-full" />
-                <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f466.svg" alt="طفل" className="h-full" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#31885F]/20 to-transparent rounded-full translate-y-16 -translate-x-16 group-hover:scale-150 transition-transform duration-700" />
+              <div className="relative flex flex-col items-center">
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#31885F] to-[#4ade80] text-white flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform shadow-lg">
+                  <Gamepad2 size={40} />
+                </div>
+                <h2 className="text-3xl font-bold text-brand-deep mb-2">أنا بطل اللعبة</h2>
+                <span className="text-sm text-[#31885F] font-bold bg-[#31885F]/10 px-4 py-1.5 rounded-full">المغامرات واللعب (6-12 سنة)</span>
               </div>
-              <h2 className="text-2xl font-bold text-brand-deep mb-1">أنا طفل</h2>
-              <span className="text-xs text-brand-black/40 font-bold">٦ - ١٢ سنة</span>
             </button>
           </motion.div>
         ) : (
