@@ -98,8 +98,8 @@
       balloon.appendChild(sphere);
       balloon.appendChild(knot);
       
-      // Class for raycaster
-      balloon.setAttribute('class', 'clickable');
+      // Add class for raycaster to the sphere so it detects the mesh
+      sphere.setAttribute('class', 'clickable');
       
       // Add floating animation
       balloon.setAttribute('animation__wobble', `property: position; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; to: ${x+0.2} ${y} ${z}`);

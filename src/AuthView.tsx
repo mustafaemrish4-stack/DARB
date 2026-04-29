@@ -112,8 +112,8 @@ export const AuthView = ({ onLoginSuccess }: AuthViewProps) => {
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-brand-gold/20 to-transparent rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
               <div className="relative flex flex-col items-center">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-brand-deep to-[#7a4855] text-white flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-transform shadow-lg">
-                  <Users size={40} />
+                <div className="h-16 mb-5 group-hover:scale-110 transition-transform">
+                  <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f468-200d-1f469-200d-1f467-200d-1f466.svg" alt="عائلة" className="h-full drop-shadow-md" />
                 </div>
                 <h2 className="text-3xl font-bold text-brand-deep mb-2">أنا ولي الأمر</h2>
                 <span className="text-sm text-brand-black/50 font-bold bg-brand-deep/5 px-4 py-1.5 rounded-full">متابعة الأداء والتحكم</span>
@@ -126,8 +126,9 @@ export const AuthView = ({ onLoginSuccess }: AuthViewProps) => {
             >
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#31885F]/20 to-transparent rounded-full translate-y-16 -translate-x-16 group-hover:scale-150 transition-transform duration-700" />
               <div className="relative flex flex-col items-center">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#31885F] to-[#4ade80] text-white flex items-center justify-center mb-5 group-hover:scale-110 group-hover:-rotate-3 transition-transform shadow-lg">
-                  <Gamepad2 size={40} />
+                <div className="h-16 flex justify-center gap-1 mb-5 group-hover:scale-110 transition-transform">
+                  <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f467.svg" alt="طفلة" className="h-full drop-shadow-md" />
+                  <img src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f466.svg" alt="طفل" className="h-full drop-shadow-md" />
                 </div>
                 <h2 className="text-3xl font-bold text-brand-deep mb-2">أنا بطل اللعبة</h2>
                 <span className="text-sm text-[#31885F] font-bold bg-[#31885F]/10 px-4 py-1.5 rounded-full">المغامرات واللعب (6-12 سنة)</span>

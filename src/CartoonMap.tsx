@@ -183,7 +183,7 @@ export const CartoonMap = ({ onStartTour }: CartoonMapProps) => {
       </AnimatePresence>
 
       {/* Decorative Badge */}
-      <div className="absolute top-6 left-6 bg-white/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-sm border border-brand-deep/5 flex items-center gap-2 z-10">
+      <div className="absolute top-20 left-6 bg-white/80 backdrop-blur-md px-4 py-2 rounded-2xl shadow-sm border border-brand-deep/5 flex items-center gap-2 z-10">
         <Compass className="text-brand-bright" size={18} />
         <span className="text-[10px] font-bold text-brand-deep uppercase tracking-widest">خريطة الحكايات</span>
       </div>

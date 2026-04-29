@@ -497,12 +497,12 @@ const MemoryGame = ({ onClose }: { onClose: () => void }) => {
 
   const startNewGame = () => {
     const items = [
-      { label: 'ديناصور', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f996.svg' },
-      { label: 'صاروخ فضاء', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f680.svg' },
-      { label: 'أسد شجاع', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f981.svg' },
-      { label: 'روبوت ذكي', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f916.svg' },
-      { label: 'غواصة', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f6a8.svg' },
-      { label: 'بالون سحري', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f388.svg' }
+      { label: 'المسجد الأقصى', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f54c.svg' },
+      { label: 'بطيخة', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f349.svg' },
+      { label: 'غصن زيتون', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f33f.svg' },
+      { label: 'فلافل فلسطيني', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f9c6.svg' },
+      { label: 'حمامة السلام', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f54a.svg' },
+      { label: 'مفتاح العودة', icon: 'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f5dd.svg' }
     ];
     const deck = [...items, ...items]
       .sort(() => Math.random() - 0.5)
@@ -923,10 +923,10 @@ export default function App() {
   }, [isDarkMode]);
 
   const experiences = [
-    { id: 1, title: 'جولة القدس 360', type: 'VR 360', image: '/360/jerusalem.jpg', img: 'jerusalem' },
-    { id: 2, title: 'نابلس 360', type: 'VR 360', image: '/360/nablus.jpg', img: 'nablus' },
-    { id: 3, title: 'يافا 360', type: 'VR 360', image: '/360/jaffa.jpg', img: 'jaffa' },
-    { id: 4, title: 'فيديو 360 طبيعة (بدون نت)', type: 'VR Video', video: '/videos/nature.mp4', img: 'nature' }
+    { id: 1, title: 'جولة القدس 360', type: 'VR 360', image: 'https://images.unsplash.com/photo-1548231264-58a4df45eab0?q=80&w=1024', img: 'jerusalem' },
+    { id: 2, title: 'نابلس 360', type: 'VR 360', image: 'https://images.unsplash.com/photo-1541410965313-d53b3c16ef17?q=80&w=1024', img: 'nablus' },
+    { id: 3, title: 'يافا 360', type: 'VR 360', image: 'https://images.unsplash.com/photo-1594950669298-21d98fa6a8b1?q=80&w=1024', img: 'jaffa' },
+    { id: 4, title: 'فيديو 360 (طبيعة وفضاء)', type: 'VR Video', video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4', img: 'nature' }
   ];
 
   if (currentView === 'auth') {
@@ -1211,26 +1211,7 @@ export default function App() {
                     </motion.div>
                   </section>
 
-                  {/* Section 1.5: Lullabies */}
-                  <section>
-                    <h3 className="text-xl font-bold text-brand-deep mb-4 border-r-4 border-[#5C2A9D] pr-3">تهويدات درب</h3>
-                    <motion.div 
-                      whileHover={{ y: -5 }}
-                      onClick={() => setIsLullabiesOpen(true)}
-                      className="bg-gradient-to-l from-[#2B0F4C] to-[#5C2A9D] rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden cursor-pointer"
-                    >
-                      <div className="relative z-10">
-                        <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-white mb-4">
-                          <Moon size={24} />
-                        </div>
-                        <h4 className="text-white text-2xl font-bold mb-2">رحلة لعالم الأحلام</h4>
-                        <p className="text-white/70 text-sm font-medium">موسيقى هادئة وتهويدات لجميع الأعمار</p>
-                      </div>
-                      <div className="absolute right-0 bottom-0 top-0 w-32 bg-gradient-to-l from-white/10 to-transparent"></div>
-                      <div className="absolute top-4 left-6 text-2xl animate-pulse">⭐</div>
-                      <div className="absolute bottom-6 left-12 text-xl animate-pulse delay-300">✨</div>
-                    </motion.div>
-                  </section>
+
 
                   {/* Section 2: Palestine 360 */}
                   <section>
