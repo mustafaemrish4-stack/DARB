@@ -166,7 +166,6 @@ const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, initialPl
         { name: 'الأقصى (1)', image: '/360/aqsa/1.jpg' },
         { name: 'الأقصى (2)', image: '/360/aqsa/2.jpg' },
         { name: 'الأقصى (3)', image: '/360/aqsa/3.jpg' },
-        { name: 'الأقصى (4)', image: '/360/aqsa/4.jpg' },
         { name: 'الأقصى (5)', image: '/360/aqsa/5.jpg' },
         { name: 'الأقصى (6)', image: '/360/aqsa/6.jpg' },
         { name: 'الأقصى (7)', image: '/360/aqsa/7.jpg' },
@@ -965,7 +964,13 @@ export default function App() {
           <EnglishLettersGame onClose={() => setSelectedCategory(null)} />
         )}
         {isDailyChallengeOpen && (
-          <ARExperience onClose={() => setIsDailyChallengeOpen(false)} />
+          <div className="fixed inset-0 z-[1000] bg-black/80 flex items-center justify-center p-8 backdrop-blur-sm">
+            <div className="bg-white rounded-[2rem] p-8 text-center max-w-sm w-full">
+              <h3 className="text-2xl font-bold text-brand-deep mb-4">التحدي اليومي</h3>
+              <p className="text-brand-black/60 font-medium mb-8">عذراً، تحدي اليوم لم يبدأ بعد. عد غداً!</p>
+              <button onClick={() => setIsDailyChallengeOpen(false)} className="w-full py-4 rounded-xl bg-brand-gold text-brand-deep font-bold text-lg">العودة للرئيسية</button>
+            </div>
+          </div>
         )}
       </AnimatePresence>
       {/* Top Bar */}
@@ -1175,7 +1180,7 @@ export default function App() {
                     <h3 className="text-xl font-bold text-brand-deep mb-4 border-r-4 border-brand-gold pr-3">مساحة الواقع المعزز (AR)</h3>
                     <motion.div 
                       whileHover={{ y: -5 }}
-                      onClick={() => setIsDailyChallengeOpen(true)}
+                      onClick={() => window.location.href = '/ar-experience.html'}
                       className="bg-brand-deep rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden cursor-pointer"
                     >
                       <div className="relative z-10">

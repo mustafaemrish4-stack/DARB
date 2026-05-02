@@ -12,12 +12,12 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
   const [currentVideoUrl, setCurrentVideoUrl] = useState(initialVideoUrl);
 
   const videoCatalog = [
-    { id: 1, title: 'الرحلة الأولى (غابة)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4' },
-    { id: 2, title: 'الرحلة الثانية (فضاء)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4' },
-    { id: 3, title: 'الرحلة الثالثة (مغامرة)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' },
-    { id: 4, title: 'الرحلة الرابعة (أكشن)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4' },
-    { id: 5, title: 'الرحلة الخامسة (طبيعة)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4' },
-    { id: 6, title: 'الرحلة السادسة (بحار)', url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4' }
+    { id: 1, title: 'الرحلة الأولى (غابة)', url: '/assets/vr_video.mp4' },
+    { id: 2, title: 'الرحلة الثانية (فضاء)', url: '/assets/vr_video.mp4' },
+    { id: 3, title: 'الرحلة الثالثة (مغامرة)', url: '/assets/vr_video.mp4' },
+    { id: 4, title: 'الرحلة الرابعة (أكشن)', url: '/assets/vr_video.mp4' },
+    { id: 5, title: 'الرحلة الخامسة (طبيعة)', url: '/assets/vr_video.mp4' },
+    { id: 6, title: 'الرحلة السادسة (بحار)', url: '/assets/vr_video.mp4' }
   ];
 
   return (
