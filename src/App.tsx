@@ -673,7 +673,7 @@ const MapComponent = ({ onStartTour }: { onStartTour: (place: any) => void }) =>
       pos: [32.2211, 35.2544], 
       desc: 'دمشق الصغرى ومدينة الكنافة.',
       photos: [
-        '/assets/jerusalem.jpg'
+        '/assets/nablus.jpg'
       ],
       tour: { name: 'نابلس القديمة', lat: 32.2211, lng: 35.2544, heading: 0 }
     },
@@ -682,7 +682,7 @@ const MapComponent = ({ onStartTour }: { onStartTour: (place: any) => void }) =>
       pos: [31.5017, 34.4667], 
       desc: 'مدينة العزة والصمود.',
       photos: [
-        '/assets/jaffa.jpg'
+        '/assets/gaza.jpg'
       ],
       tour: { name: 'غزة البحر', lat: 31.5017, lng: 34.4667, heading: 0 }
     },
@@ -923,7 +923,7 @@ export default function App() {
 
   const experiences = [
     { id: 1, title: 'جولة القدس 360', type: 'VR 360', image: '/assets/jerusalem.jpg', img: 'jerusalem', is360: true },
-    { id: 2, title: 'نابلس 360', type: 'VR 360', image: '/assets/jerusalem.jpg', img: 'nablus', is360: true },
+    { id: 2, title: 'نابلس 360', type: 'VR 360', image: '/assets/nablus.jpg', img: 'nablus', is360: true },
     { id: 3, title: 'يافا 360', type: 'VR 360', image: '/assets/jaffa.jpg', img: 'jaffa', is360: true },
     { id: 4, title: 'فيديو 360 (طبيعة وفضاء)', type: 'VR Video', video: '/assets/vr_video.mp4', img: 'nature', is360: true }
   ];

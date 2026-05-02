@@ -16,8 +16,7 @@ export const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, in
       name: 'القدس',
       type: 'city',
       subPlaces: [
-        { name: 'القدس (بانوراما)', image: '/assets/jerusalem.jpg', is360: false },
-        { name: 'البلدة القديمة', image: '/assets/jerusalem.jpg', is360: false }
+        { name: 'القدس - المسجد الأقصى', image: '/assets/jerusalem.jpg', is360: false }
       ]
     },
     {
@@ -32,22 +31,22 @@ export const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, in
       name: 'غزة',
       type: 'city',
       subPlaces: [
-        { name: 'شاطئ غزة', image: '/assets/jaffa.jpg', is360: false },
-        { name: 'ميناء غزة', image: '/assets/jaffa.jpg', is360: false }
+        { name: 'شاطئ غزة', image: '/assets/gaza.jpg', is360: false },
+        { name: 'ميناء غزة', image: '/assets/gaza.jpg', is360: false }
       ]
     },
     {
       name: 'نابلس',
       type: 'city',
       subPlaces: [
-        { name: 'جبال نابلس', image: '/assets/jerusalem.jpg', is360: false }
+        { name: 'جبال نابلس', image: '/assets/nablus.jpg', is360: false }
       ]
     },
     {
       name: 'جنين',
       type: 'city',
       subPlaces: [
-        { name: 'سهل مرج بن عامر', image: '/assets/jerusalem.jpg', is360: false }
+        { name: 'سهل مرج بن عامر', image: '/assets/nablus.jpg', is360: false }
       ]
     }
   ];

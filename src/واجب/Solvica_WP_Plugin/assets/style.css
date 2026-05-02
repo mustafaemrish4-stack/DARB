@@ -360,3 +360,13 @@
         bottom: 80px;
     }
 }
+
+/* Hide Site Title */
+.wp-block-site-title { display: none !important; }
+body, .elementor-page {
+    background-image: url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1920&auto=format&fit=crop') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    background-color: #1a1a1a !important;
+}

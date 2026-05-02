@@ -12,7 +12,7 @@ export const LullabiesView = ({ onClose }: { onClose: () => void }) => {
   
   const lullabies = {
     '3-6': [
-      { id: 1, title: 'يلا تنام ريما', subtitle: 'تهويدة فلسطينية تراثية', duration: '3:45', audio: 'https://assets.mixkit.co/music/preview/mixkit-sleepy-cat-135.mp3' },
+      { id: 1, title: 'هدهدة نام يا صغيري', subtitle: 'تهويدة فلسطينية تراثية', duration: '3:45', audio: '/assets/lullaby.mp3' },
       { id: 2, title: 'يا طير الطاير', subtitle: 'ألحان هادئة للأطفال', duration: '4:20', audio: 'https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3' },
     ],
     '7-10': [
@@ -24,6 +24,9 @@ export const LullabiesView = ({ onClose }: { onClose: () => void }) => {
       { id: 6, title: 'رحلة إلى الفضاء', subtitle: 'موسيقى عميقة للاسترخاء', duration: '8:30', audio: 'https://assets.mixkit.co/music/preview/mixkit-sleep-131.mp3' },
     ]
   };
+
+  const [selectedSong, setSelectedSong] = useState<any>(null);
+  const [progress, setProgress] = useState(0);
 
   const handlePlayPause = (song: any) => {
     if (playingId === song.id) {
@@ -37,6 +40,25 @@ export const LullabiesView = ({ onClose }: { onClose: () => void }) => {
       setPlayingId(song.id);
     }
   };
+
+  const handleSelectSong = (song: any) => {
+    setSelectedSong(song);
+    if (playingId !== song.id) {
+      handlePlayPause(song);
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    
+    const updateProgress = () => {
+      setProgress((audio.currentTime / (audio.duration || 1)) * 100);
+    };
+    
+    audio.addEventListener('timeupdate', updateProgress);
+    return () => audio.removeEventListener('timeupdate', updateProgress);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -178,17 +200,17 @@ export const LullabiesView = ({ onClose }: { onClose: () => void }) => {
               >
                 {/* Play Button */}
                 <button 
-                  onClick={() => handlePlayPause(song)}
+                  onClick={(e) => { e.stopPropagation(); handlePlayPause(song); }}
                   className={cn(
-                    "w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 transition-transform hover:scale-105 shadow-lg",
+                    "w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 transition-transform hover:scale-105 shadow-lg relative z-10",
                     playingId === song.id ? "bg-gradient-to-br from-[#FFD700] to-[#FFA500] text-[#0A0F2C]" : "bg-white/10 text-white"
                   )}
                 >
                   {playingId === song.id ? <PauseCircle size={32} /> : <PlayCircle size={32} />}
                 </button>
 
-                {/* Info */}
-                <div className="flex-1">
+                {/* Info (Clicking opens Full Player) */}
+                <div className="flex-1 cursor-pointer" onClick={() => handleSelectSong(song)}>
                   <h4 className="font-bold text-lg text-white mb-1">{song.title}</h4>
                   <p className="text-xs text-white/60 font-medium mb-2">{song.subtitle}</p>
                   
@@ -221,6 +243,85 @@ export const LullabiesView = ({ onClose }: { onClose: () => void }) => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Full Screen Spotify-like Player */}
+      <AnimatePresence>
+        {selectedSong && (
+          <motion.div
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-[1001] bg-[#0A0F2C] flex flex-col px-8 pb-12 pt-8"
+          >
+            {/* Player Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2D1B4E] to-[#0A0F2C] opacity-90 pointer-events-none" />
+            
+            <header className="relative z-10 flex justify-between items-center mb-12">
+              <button onClick={() => setSelectedSong(null)} className="p-3 bg-white/10 rounded-full text-white">
+                <ChevronLeft size={24} className="rotate-[-90deg]" />
+              </button>
+              <span className="text-xs font-bold text-white/50 tracking-widest uppercase">يتم التشغيل الآن</span>
+              <div className="w-12" />
+            </header>
+
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
+              {/* Giant Album Art (Moon/Stars) */}
+              <motion.div 
+                animate={playingId === selectedSong.id ? { rotate: 360 } : { rotate: 0 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gradient-to-br from-[#1A1B4B] to-[#2D1B4E] shadow-[0_0_80px_rgba(45,27,78,0.8)] border-4 border-white/10 flex items-center justify-center mb-12 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30" />
+                <Moon size={80} className="text-[#FFD700] drop-shadow-[0_0_20px_rgba(255,215,0,0.8)]" />
+              </motion.div>
+
+              <div className="w-full text-center mb-8">
+                <h2 className="text-3xl font-serif font-bold text-white mb-2">{selectedSong.title}</h2>
+                <p className="text-white/60 font-medium">{selectedSong.subtitle}</p>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="w-full mb-12">
+                <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden relative cursor-pointer" onClick={(e) => {
+                  if(audioRef.current) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const percent = (e.clientX - rect.left) / rect.width;
+                    audioRef.current.currentTime = percent * (audioRef.current.duration || 0);
+                  }
+                }}>
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-[#FFD700] to-[#FFA500]"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <div className="flex justify-between mt-2">
+                  <span className="text-xs text-white/50 font-mono">0:00</span>
+                  <span className="text-xs text-white/50 font-mono">{selectedSong.duration}</span>
+                </div>
+              </div>
+
+              {/* Huge Play Controls */}
+              <div className="flex items-center justify-center gap-8 w-full">
+                <button className="text-white/50 hover:text-white transition-colors">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+                </button>
+                
+                <button 
+                  onClick={() => handlePlayPause(selectedSong)}
+                  className="w-24 h-24 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFA500] flex items-center justify-center shadow-[0_0_40px_rgba(255,215,0,0.4)] hover:scale-105 transition-transform text-[#0A0F2C]"
+                >
+                  {playingId === selectedSong.id ? <PauseCircle size={48} /> : <PlayCircle size={48} />}
+                </button>
+
+                <button className="text-white/50 hover:text-white transition-colors">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
