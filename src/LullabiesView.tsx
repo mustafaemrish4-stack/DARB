@@ -12,7 +12,7 @@ export const LullabiesView = ({ onClose }: { onClose: () => void }) => {
   
   const lullabies = {
     '3-6': [
-      { id: 1, title: 'هدهدة نام يا صغيري', subtitle: 'تهويدة فلسطينية تراثية', duration: '3:45', audio: 'https://files.catbox.moe/sqhi44.mp3' },
+      { id: 1, title: 'هدهدة نام يا صغيري', subtitle: 'هدهدة درب فلسطينية تراثية', duration: '3:45', audio: 'https://files.catbox.moe/sqhi44.mp3' },
       { id: 2, title: 'يا طير الطاير', subtitle: 'ألحان هادئة للأطفال', duration: '4:20', audio: 'https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-493.mp3' },
     ],
     '7-10': [

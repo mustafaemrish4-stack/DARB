@@ -6,13 +6,10 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <style>
       body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #111; }
-      #fs-btn {
+      #fs-btn, #vr-btn {
         position: absolute;
         top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
         z-index: 9999;
-        background: rgba(41, 121, 255, 0.9);
         color: white;
         border: 2px solid white;
         border-radius: 30px;
@@ -23,10 +20,21 @@
         cursor: pointer;
         box-shadow: 0 4px 15px rgba(0,0,0,0.5);
       }
+      #fs-btn {
+        left: 50%;
+        transform: translateX(-110%);
+        background: rgba(41, 121, 255, 0.9);
+      }
+      #vr-btn {
+        left: 50%;
+        transform: translateX(10%);
+        background: rgba(233, 30, 99, 0.9);
+      }
     </style>
   </head>
   <body>
     <button id="fs-btn">تكبير الشاشة</button>
+    <button id="vr-btn">وضع VR Box</button>
     <a-scene 
       embedded 
       vr-mode-ui="enabled: true" 
@@ -51,6 +59,13 @@
           });
         } else {
           document.exitFullscreen();
+        }
+      });
+
+      document.getElementById('vr-btn').addEventListener('click', () => {
+        const scene = document.querySelector('a-scene');
+        if (scene) {
+          scene.enterVR();
         }
       });
     </script>

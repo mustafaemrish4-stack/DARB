@@ -131,7 +131,7 @@ export const AuthView = ({ onLoginSuccess }: AuthViewProps) => {
                   <img src="/assets/boy_icon.png" alt="طفل" className="h-full drop-shadow-xl" />
                 </div>
                 <h2 className="text-3xl font-bold text-brand-deep mb-2">أنا بطل اللعبة</h2>
-                <span className="text-sm text-[#31885F] font-bold bg-[#31885F]/10 px-4 py-1.5 rounded-full">المغامرات واللعب (6-12 سنة)</span>
+                <span className="text-sm text-[#31885F] font-bold bg-[#31885F]/10 px-4 py-1.5 rounded-full">المغامرات واللعب (1-11 سنة)</span>
               </div>
             </button>
           </motion.div>

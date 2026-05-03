@@ -1124,7 +1124,7 @@ export default function App() {
                   onClick={() => setIsRatingOpen(true)}
                 />
                 <ActionButton 
-                  label="تهويدة درب" 
+                  label="هدهدة درب" 
                   icon={Moon} 
                   color="bg-gradient-to-br from-indigo-500 to-purple-600" 
                   onClick={() => setIsLullabiesOpen(true)}
@@ -1346,7 +1346,7 @@ export default function App() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => window.location.href = '/ar-experience.html'} 
+                  onClick={() => window.location.href = `/ar-experience.html?v=${Date.now()}`} 
                   className="bg-brand-deep rounded-[2.5rem] p-8 shadow-xl border border-brand-deep/5 flex items-center gap-6 text-right cursor-pointer group relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
@@ -1354,8 +1354,24 @@ export default function App() {
                     <Layers size={40} />
                   </div>
                   <div className="z-10 relative">
-                    <h3 className="text-xl font-bold text-white mb-1">الرسم واللعب بالهواء (AR)</h3>
-                    <p className="text-xs text-white/70 font-bold">اسقط سيارة على الأرض وتحكم بها سحرياً!</p>
+                    <h3 className="text-xl font-bold text-white mb-1">تفجير البالونات (AR)</h3>
+                    <p className="text-xs text-white/70 font-bold">العب واجمع النقاط من حولك!</p>
+                  </div>
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => window.location.href = `/ar-drawing.html?v=${Date.now()}`} 
+                  className="bg-brand-tertiary rounded-[2.5rem] p-8 shadow-xl border border-brand-tertiary/5 flex items-center gap-6 text-right cursor-pointer group relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+                  <div className="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-lg z-10 border border-white/30">
+                    <Layers size={40} />
+                  </div>
+                  <div className="z-10 relative">
+                    <h3 className="text-xl font-bold text-white mb-1">الرسم في الهواء (AR Track)</h3>
+                    <p className="text-xs text-white/70 font-bold">ارسم مسارات وسكك في غرفتك الحقيقية!</p>
                   </div>
                 </motion.button>
               </div>

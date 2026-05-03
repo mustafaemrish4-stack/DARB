@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AR Drawing / Track Craft Prototype</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <style>
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: sans-serif; }
+    #video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+    #scene-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
+    #ui-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+    #toolbar {
+      position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 30px;
+      display: flex; gap: 15px; pointer-events: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .color-btn { width: 40px; height: 40px; border-radius: 50%; border: 3px solid white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    .crosshair {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 30px; height: 30px; border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; pointer-events: none;
+    }
+    .crosshair::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 4px; height: 4px; background: white; border-radius: 50%; }
+    #instruction {
+      position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.6); color: white; padding: 10px 20px; border-radius: 20px; font-weight: bold; text-align: center;
+    }
+    #start-screen { position:absolute; top:0; left:0; width:100%; height:100%; background:#1A1B4B; z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; }
+    #loading-screen { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9000; display:none; flex-direction:column; align-items:center; justify-content:center; color:white; font-size:20px; }
+  </style>
+  <script>
+    let currentColor = '#FF1744';
+    let isDrawing = false;
+
+    function setColor(color) {
+      currentColor = color;
+      document.getElementById('crosshair').style.borderColor = color;
+    }
+
+    AFRAME.registerComponent('ar-draw', {
+      init: function () {
+        const scene = this.el;
+        let lastDrawTime = 0;
+
+        // On mobile, tap anywhere to draw. On desktop, click to draw.
+        window.addEventListener('touchstart', () => isDrawing = true);
+        window.addEventListener('touchend', () => isDrawing = false);
+        window.addEventListener('mousedown', () => isDrawing = true);
+        window.addEventListener('mouseup', () => isDrawing = false);
+
+        scene.addEventListener('tick', (time) => {
+          if (!isDrawing) return;
+          if (time - lastDrawTime < 50) return; // limit draw rate
+          lastDrawTime = time;
+
+          const camera = document.querySelector('a-camera');
+          if (!camera) return;
+
+          // Calculate position 1.5 meters in front of the camera
+          const position = new THREE.Vector3(0, 0, -1.5);
+          position.applyMatrix4(camera.object3D.matrixWorld);
+
+          const block = document.createElement('a-box');
+          block.setAttribute('position', `${position.x} ${position.y} ${position.z}`);
+          block.setAttribute('scale', '0.1 0.1 0.1');
+          block.setAttribute('color', currentColor);
+          block.setAttribute('material', 'roughness: 0.3; metalness: 0.1');
+          
+          // Small pop animation
+          block.setAttribute('animation', 'property: scale; from: 0 0 0; to: 0.1 0.1 0.1; dur: 200; easing: easeOutBack');
+
+          scene.appendChild(block);
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+  <div id="start-screen">
+    <h1 style="margin-bottom:20px; font-size:32px;">الرسم واللعب في الهواء</h1>
+    <p style="margin-bottom:40px; text-align:center; padding:0 20px; font-size: 18px;">المس الشاشة وابدأ في بناء سكك ومسارات في غرفتك!</p>
+    <button id="start-btn" style="padding:15px 40px; font-size:24px; border-radius:30px; background:#FFD700; color:#000; border:none; font-weight:bold; cursor:pointer;">ابدأ البناء</button>
+  </div>
+  
+  <div id="loading-screen">جاري فتح الكاميرا...</div>
+  
+  <video id="video-bg" autoplay playsinline webkit-playsinline muted></video>
+  
+  <div id="scene-container"></div>
+  
+  <div id="ui-container" style="display:none;">
+    <div id="instruction">المس الشاشة وابدأ بالرسم في الهواء!</div>
+    <div class="crosshair" id="crosshair"></div>
+    <div id="toolbar">
+      <div class="color-btn" style="background:#FF1744" onclick="setColor('#FF1744')"></div>
+      <div class="color-btn" style="background:#00E676" onclick="setColor('#00E676')"></div>
+      <div class="color-btn" style="background:#2979FF" onclick="setColor('#2979FF')"></div>
+      <div class="color-btn" style="background:#FFEA00" onclick="setColor('#FFEA00')"></div>
+      <div class="color-btn" style="background:#D500F9" onclick="setColor('#D500F9')"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('start-btn').addEventListener('click', async function() {
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('loading-screen').style.display = 'flex';
+      
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        const video = document.getElementById('video-bg');
+        video.srcObject = stream;
+        
+        video.onloadedmetadata = () => {
+          document.getElementById('loading-screen').style.display = 'none';
+          document.getElementById('ui-container').style.display = 'block';
+          
+          document.getElementById('scene-container').innerHTML = `
+            <a-scene ar-draw embedded renderer="alpha: true; antialias: true;" vr-mode-ui="enabled: false">
+              <a-camera position="0 1.6 0" look-controls="magicWindowTrackingEnabled: true; touchEnabled: false; mouseEnabled: false"></a-camera>
+              <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+              <a-light type="directional" color="#ffffff" intensity="0.5" position="-1 2 1"></a-light>
+            </a-scene>
+          `;
+          
+          setColor('#FF1744');
+        };
+      } catch (err) {
+        document.getElementById('loading-screen').innerHTML = 'خطأ: يرجى السماح بتشغيل الكاميرا من إعدادات المتصفح';
+      }
+    });
+  </script>
+</body>
+</html>
