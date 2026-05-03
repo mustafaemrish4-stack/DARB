@@ -10,14 +10,12 @@ export const VideosView = ({ onBack }: { onBack: () => void }) => {
   const [isAROpen, setIsAROpen] = useState(false);
   const [vrVideoUrl, setVrVideoUrl] = useState<string | null>(null);
 
-  // Strictly 5 Videos as Requested
-  // Strictly 8 Youtube VR Videos As Requested
   const videoCatalog = [
-    { id: 1, title: 'فيديو 1 (حديقة)', url: 'https://files.catbox.moe/um1562.mp4', icon: '🌲' },
-    { id: 2, title: 'فيديو 2 (طبيعة)', url: 'https://files.catbox.moe/878rh8.mp4', icon: '🏞️' },
-    { id: 3, title: 'فيديو 3 (منظر)', url: 'https://files.catbox.moe/bl5gfm.mp4', icon: '🌌' },
-    { id: 4, title: 'فيديو 4 (مغامرة)', url: 'https://files.catbox.moe/91ckkl.mp4', icon: '🚀' },
-    { id: 5, title: 'فيديو 5 (استكشاف)', url: 'https://files.catbox.moe/o1ebdh.mp4', icon: '🌍' }
+    { id: 1, title: 'فيديو 1 (عالي الجودة)', url: 'https://files.catbox.moe/smdqsi.mp4', icon: '🌲' },
+    { id: 2, title: 'فيديو 2 (عالي الجودة)', url: 'https://files.catbox.moe/g6l3da.mp4', icon: '🏞️' },
+    { id: 3, title: 'فيديو 3 (عالي الجودة)', url: 'https://files.catbox.moe/ccur6d.mp4', icon: '🌌' },
+    { id: 4, title: 'فيديو 4 (عالي الجودة)', url: 'https://files.catbox.moe/lr2or2.mp4', icon: '🚀' },
+    { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4', icon: '🌍' }
   ];
 
   return (

@@ -12,11 +12,11 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
   const [currentVideoUrl, setCurrentVideoUrl] = useState(initialVideoUrl);
 
   const videoCatalog = [
-    { id: 1, title: 'فيديو 1 (حديقة)', url: 'https://files.catbox.moe/um1562.mp4' },
-    { id: 2, title: 'فيديو 2 (طبيعة)', url: 'https://files.catbox.moe/878rh8.mp4' },
-    { id: 3, title: 'فيديو 3 (منظر)', url: 'https://files.catbox.moe/bl5gfm.mp4' },
-    { id: 4, title: 'فيديو 4 (مغامرة)', url: 'https://files.catbox.moe/91ckkl.mp4' },
-    { id: 5, title: 'فيديو 5 (استكشاف)', url: 'https://files.catbox.moe/o1ebdh.mp4' }
+    { id: 1, title: 'فيديو 1 (عالي الجودة)', url: 'https://files.catbox.moe/smdqsi.mp4' },
+    { id: 2, title: 'فيديو 2 (عالي الجودة)', url: 'https://files.catbox.moe/g6l3da.mp4' },
+    { id: 3, title: 'فيديو 3 (عالي الجودة)', url: 'https://files.catbox.moe/ccur6d.mp4' },
+    { id: 4, title: 'فيديو 4 (عالي الجودة)', url: 'https://files.catbox.moe/lr2or2.mp4' },
+    { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4' }
   ];
 
   return (
