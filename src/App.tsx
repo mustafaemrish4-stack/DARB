@@ -161,9 +161,19 @@ const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, initialPl
     {
       name: 'القدس',
       type: '360',
-      image: '/assets/jerusalem.jpg',
+      image: '/360/aqsa/1.jpg',
       subPlaces: [
-        { name: 'القدس - المسجد الأقصى', image: '/assets/jerusalem.jpg' }
+        { name: 'الأقصى (1)', image: '/360/aqsa/1.jpg' },
+        { name: 'الأقصى (2)', image: '/360/aqsa/2.jpg' },
+        { name: 'الأقصى (3)', image: '/360/aqsa/3.jpg' },
+        { name: 'الأقصى (5)', image: '/360/aqsa/5.jpg' },
+        { name: 'الأقصى (6)', image: '/360/aqsa/6.jpg' },
+        { name: 'الأقصى (7)', image: '/360/aqsa/7.jpg' },
+        { name: 'الأقصى (8)', image: '/360/aqsa/8.jpg' },
+        { name: 'الأقصى (9)', image: '/360/aqsa/9.jpg' },
+        { name: 'الأقصى (10)', image: '/360/aqsa/10.jpg' },
+        { name: 'الأقصى (11)', image: '/360/aqsa/11.jpg' },
+        { name: 'الأقصى (12)', image: '/360/aqsa/12.jpg' },
       ]
     },
     { name: 'يافا', type: 'image', image: '/assets/jaffa.jpg' },
