@@ -924,7 +924,7 @@ export default function App() {
     { id: 1, title: 'جولة القدس 360', type: 'VR 360', image: '/assets/jerusalem.jpg', img: 'jerusalem', is360: true },
     { id: 2, title: 'نابلس 360', type: 'VR 360', image: '/assets/nablus.jpg', img: 'nablus', is360: true },
     { id: 3, title: 'يافا 360', type: 'VR 360', image: '/assets/jaffa.jpg', img: 'jaffa', is360: true },
-    { id: 4, title: 'فيديو 360 (طبيعة وفضاء)', type: 'VR Video', video: '/assets/vr_video.mp4', img: 'nature', is360: true }
+    { id: 4, title: 'فيديو 360 (طبيعة وفضاء)', type: 'VR Video', video: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4', img: 'nature', is360: true }
   ];
 
   if (currentView === 'auth') {
