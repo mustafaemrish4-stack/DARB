@@ -38,12 +38,13 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
       {/* Sandboxed iFrame to prevent any React / Vite / WebGL conflicts */}
       <div className="flex-1 relative bg-black w-full h-full">
         <iframe 
-          src={`/360-player.html?video=${encodeURIComponent(currentVideoUrl)}`} 
-          className="w-full h-full border-none outline-none"
-          allow="fullscreen; accelerometer; gyroscope; xr-spatial-tracking"
+          src={`/360-player.html?v=${Date.now()}&video=${encodeURIComponent(currentVideoUrl)}`} 
+          className="w-full h-full border-none"
+          allow="fullscreen; accelerometer; gyroscope; xr-spatial-tracking; display-capture; autoplay; encrypted-media"
           allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-presentation"
-        ></iframe>
+          sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
+          title="360 Video Player"
+        />
       </div>
 
       <footer className="p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent overflow-x-auto no-scrollbar z-[1010]">

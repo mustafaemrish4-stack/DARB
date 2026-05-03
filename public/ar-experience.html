@@ -1,26 +1,25 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>لعبة فرقعة البالونات AR</title>
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-  <!-- AR Component -->
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AR Game</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
   <style>
-    body { margin: 0; overflow: hidden; font-family: sans-serif; }
-    #ui-container {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 10; display: flex; flex-direction: column;
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: sans-serif; }
+    #video-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;
     }
-    #loading-screen {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; color: white; display: flex; align-items: center; justify-content: center;
-      z-index: 9999; font-size: 24px; font-weight: bold;
+    #scene-container {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;
+    }
+    #ui-container {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none;
     }
     #score-board {
-      background: rgba(255,255,255,0.8); padding: 15px 30px; border-radius: 30px;
+      background: rgba(255,255,255,0.9); padding: 15px 30px; border-radius: 30px;
       margin: 20px auto; font-size: 24px; font-weight: bold; color: #E91E63;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2); pointer-events: auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); pointer-events: auto; text-align: center; width: fit-content;
     }
     .crosshair {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -31,37 +30,23 @@
       content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       width: 6px; height: 6px; background: white; border-radius: 50%;
     }
+    #start-screen {
+      position:absolute; top:0; left:0; width:100%; height:100%; background:#1A1B4B; z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white;
+    }
+    #loading-screen {
+      position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9000; display:none; flex-direction:column; align-items:center; justify-content:center; color:white; font-size:20px;
+    }
   </style>
   <script>
     let score = 0;
-    
-    // Component to handle balloon behavior
+    const colors = ['#FF1744', '#00E676', '#2979FF', '#FFEA00', '#D500F9', '#FF9100'];
+
     AFRAME.registerComponent('balloon', {
-      init: function () {
-        this.el.addEventListener('click', () => {
-          // Pop balloon!
-          score += 10;
-          document.getElementById('score-text').innerText = 'النقاط: ' + score;
-          
-          // Shrink animation before removing
-          this.el.setAttribute('animation', 'property: scale; to: 0 0 0; dur: 150; easing: easeInQuad');
-          setTimeout(() => {
-            if (this.el.parentNode) {
-              this.el.parentNode.removeChild(this.el);
-            }
-          }, 150);
-          
-          spawnBalloon(); // Spawn a new one immediately!
-        });
-      },
       tick: function (time, timeDelta) {
-        // Float upwards
         let pos = this.el.getAttribute('position');
-        pos.y += 0.002 * timeDelta;
+        pos.y += 0.003 * timeDelta;
         this.el.setAttribute('position', pos);
-        
-        // Remove if it goes too high
-        if (pos.y > 5) {
+        if (pos.y > 6) {
           if (this.el.parentNode) {
             this.el.parentNode.removeChild(this.el);
             spawnBalloon();
@@ -70,29 +55,30 @@
       }
     });
 
-    const colors = ['#FF1744', '#00E676', '#2979FF', '#FFEA00', '#D500F9', '#FF9100'];
-
     function spawnBalloon() {
       const scene = document.querySelector('a-scene');
+      if (!scene) return;
+      
       const balloon = document.createElement('a-entity');
       
-      // Random position around the user
-      const x = (Math.random() - 0.5) * 6; // -3 to 3
+      // Spawn in a circle around the user (x and z axes)
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 3 + Math.random() * 3; // 3 to 6 meters away
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
       const y = (Math.random() - 0.5) * 2 - 1; // -2 to 0
-      const z = -2 - Math.random() * 4; // -2 to -6
       
       const color = colors[Math.floor(Math.random() * colors.length)];
       
       balloon.setAttribute('position', `${x} ${y} ${z}`);
       balloon.setAttribute('balloon', '');
       
-      // Create the sphere
       const sphere = document.createElement('a-sphere');
       sphere.setAttribute('radius', '0.4');
       sphere.setAttribute('color', color);
       sphere.setAttribute('material', 'opacity: 0.9; roughness: 0.2; metalness: 0.1');
+      sphere.setAttribute('class', 'clickable');
       
-      // Create the knot
       const knot = document.createElement('a-cone');
       knot.setAttribute('radius-bottom', '0.05');
       knot.setAttribute('radius-top', '0.01');
@@ -103,16 +89,10 @@
       balloon.appendChild(sphere);
       balloon.appendChild(knot);
       
-      // Add class for raycaster to the sphere so it detects the mesh
-      sphere.setAttribute('class', 'clickable');
-      
-
-      // Click listener for popping
       sphere.addEventListener('click', function() {
         score += 10;
         document.getElementById('score-text').innerText = `النقاط: ${score}`;
         
-        // Particle effect
         for(let p=0; p<8; p++) {
           const particle = document.createElement('a-entity');
           particle.setAttribute('geometry', 'primitive: sphere; radius: 0.05');
@@ -128,62 +108,62 @@
         setTimeout(spawnBalloon, 1000);
       });
       
-      // Add floating animation
-
       balloon.setAttribute('animation__wobble', `property: position; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; to: ${x+0.2} ${y} ${z}`);
-      
       scene.appendChild(balloon);
     }
   </script>
 </head>
 <body>
-  <div id="start-screen" style="position:absolute; top:0; left:0; width:100%; height:100%; background:#1A1B4B; z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white;">
+  <div id="start-screen">
     <h1 style="margin-bottom:20px; font-size:32px;">لعبة الواقع المعزز</h1>
-    <p style="margin-bottom:40px; text-align:center; padding:0 20px;">ستحتاج اللعبة إلى تشغيل الكاميرا الخاصة بك لكي تظهر البالونات حولك</p>
+    <p style="margin-bottom:40px; text-align:center; padding:0 20px; font-size: 18px;">قم بتفجير البالونات من حولك! استدر بهاتفك للبحث عنها.</p>
     <button id="start-btn" style="padding:15px 40px; font-size:24px; border-radius:30px; background:#FFD700; color:#000; border:none; font-weight:bold; cursor:pointer;">ابدأ اللعب</button>
   </div>
   
-  <div id="loading-screen" style="display:none;">جاري فتح الكاميرا... يرجى السماح للصلاحيات</div>
+  <div id="loading-screen">جاري فتح الكاميرا...</div>
+  
+  <video id="video-bg" autoplay playsinline webkit-playsinline muted></video>
+  
+  <div id="scene-container"></div>
+  
   <div id="ui-container" style="display:none;">
     <div id="score-board"><span id="score-text">النقاط: 0</span> 🎈</div>
     <div class="crosshair"></div>
   </div>
 
-  <div id="scene-container"></div>
-
   <script>
-    document.getElementById('start-btn').addEventListener('click', function() {
+    document.getElementById('start-btn').addEventListener('click', async function() {
       document.getElementById('start-screen').style.display = 'none';
       document.getElementById('loading-screen').style.display = 'flex';
-      document.getElementById('ui-container').style.display = 'flex';
       
-      const sceneHtml = `
-        <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;" renderer="antialias: true; alpha: true" cursor="rayOrigin: mouse" raycaster="objects: .clickable">
-          <a-camera position="0 1.6 0"></a-camera>
-          <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
-          <a-light type="directional" color="#ffffff" intensity="0.5" position="-1 2 1"></a-light>
-        </a-scene>
-      `;
-      document.getElementById('scene-container').innerHTML = sceneHtml;
-
-      // Spawn initial balloons
-      setTimeout(() => {
-        for (let i = 0; i < 8; i++) {
-          setTimeout(spawnBalloon, i * 500);
-        }
-      }, 1000);
-      
-      const checkVideo = setInterval(() => {
-        const video = document.querySelector('video');
-        if (video && video.readyState >= 2) {
+      // Start Webcam manually
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        const video = document.getElementById('video-bg');
+        video.srcObject = stream;
+        
+        video.onloadedmetadata = () => {
           document.getElementById('loading-screen').style.display = 'none';
-          clearInterval(checkVideo);
-        }
-        // Fallback: Just hide it after 5 seconds
-        setTimeout(() => {
-           document.getElementById('loading-screen').style.display = 'none';
-        }, 5000);
-      }, 500);
+          document.getElementById('ui-container').style.display = 'flex';
+          
+          // Inject A-Frame Scene (Transparent background, Gyroscope look-controls)
+          document.getElementById('scene-container').innerHTML = `
+            <a-scene embedded renderer="alpha: true; antialias: true;" cursor="rayOrigin: mouse" raycaster="objects: .clickable" vr-mode-ui="enabled: false">
+              <a-camera position="0 1.6 0" look-controls="magicWindowTrackingEnabled: true; touchEnabled: true; mouseEnabled: true"></a-camera>
+              <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+              <a-light type="directional" color="#ffffff" intensity="0.5" position="-1 2 1"></a-light>
+            </a-scene>
+          `;
+          
+          setTimeout(() => {
+            for (let i = 0; i < 12; i++) {
+              setTimeout(spawnBalloon, i * 300);
+            }
+          }, 1000);
+        };
+      } catch (err) {
+        document.getElementById('loading-screen').innerHTML = 'خطأ: يرجى السماح بتشغيل الكاميرا من إعدادات المتصفح';
+      }
     });
   </script>
 </body>

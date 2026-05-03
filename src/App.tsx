@@ -219,7 +219,7 @@ const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, initialPl
       <div className="flex-1 relative bg-zinc-900 overflow-hidden">
         {selectedImage.type === '360' ? (
           <iframe 
-            src={`/360-photo-viewer.html?image=${encodeURIComponent(selectedImage.image)}`}
+            src={`/360-photo-viewer.html?v=${Date.now()}&image=${encodeURIComponent(selectedImage.image)}`}
             className="w-full h-full border-none"
             allow="fullscreen; accelerometer; gyroscope; xr-spatial-tracking"
             allowFullScreen

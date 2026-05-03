@@ -69,7 +69,7 @@ export const ARExperience = ({ onClose }: { onClose: () => void }) => {
 
         <iframe 
           ref={iframeRef}
-          src="/ar-experience.html" 
+          src={`/ar-experience.html?v=${Date.now()}`}
           className="w-full h-full border-0"
           allow="camera; gyroscope; accelerometer; magnetometer; xr-spatial-tracking; microphone"
         />
