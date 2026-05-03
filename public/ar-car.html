@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AR Car Driving Game</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <style>
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: sans-serif; }
+    #video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+    #scene-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+    
+    #ui-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+    
+    /* Joystick / Controls */
+    #controls {
+      position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+      display: grid; grid-template-columns: 60px 60px 60px; grid-template-rows: 60px 60px;
+      gap: 10px; pointer-events: auto;
+    }
+    .ctrl-btn {
+      background: rgba(255, 255, 255, 0.8); border: 2px solid white; border-radius: 15px;
+      font-size: 24px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+      user-select: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .ctrl-btn:active { background: rgba(200, 200, 200, 0.9); transform: scale(0.95); }
+    #btn-up { grid-column: 2; grid-row: 1; }
+    #btn-down { grid-column: 2; grid-row: 2; }
+    #btn-left { grid-column: 1; grid-row: 2; }
+    #btn-right { grid-column: 3; grid-row: 2; }
+
+    #start-screen { position:absolute; top:0; left:0; width:100%; height:100%; background:#1A1B4B; z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; }
+    #loading-screen { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9000; display:none; flex-direction:column; align-items:center; justify-content:center; color:white; font-size:20px; }
+    
+    .title-banner {
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(41, 121, 255, 0.9); padding: 10px 20px; border-radius: 20px; color: white;
+      font-weight: bold; text-align: center; border: 2px solid white; pointer-events: auto;
+    }
+  </style>
+
+  <script>
+    // Car driving logic
+    let moveForward = false;
+    let moveBackward = false;
+    let turnLeft = false;
+    let turnRight = false;
+
+    AFRAME.registerComponent('car-controller', {
+      schema: { speed: { type: 'number', default: 0.05 }, turnSpeed: { type: 'number', default: 2.0 } },
+      tick: function () {
+        let rotation = this.el.getAttribute('rotation');
+        let position = this.el.getAttribute('position');
+
+        if (turnLeft) rotation.y += this.data.turnSpeed;
+        if (turnRight) rotation.y -= this.data.turnSpeed;
+        
+        if (moveForward || moveBackward) {
+          // Calculate forward direction based on rotation
+          const angle = THREE.MathUtils.degToRad(rotation.y);
+          const dirX = Math.sin(angle);
+          const dirZ = Math.cos(angle);
+          const moveSpeed = moveForward ? this.data.speed : -this.data.speed;
+          position.x -= dirX * moveSpeed;
+          position.z -= dirZ * moveSpeed;
+        }
+
+        this.el.setAttribute('rotation', rotation);
+        this.el.setAttribute('position', position);
+      }
+    });
+
+    // Touch handlers
+    function setupControls() {
+      const bindBtn = (id, startVar, endVar) => {
+        const btn = document.getElementById(id);
+        const start = (e) => { e.preventDefault(); window[startVar] = true; };
+        const end = (e) => { e.preventDefault(); window[startVar] = false; };
+        btn.addEventListener('touchstart', start, {passive: false});
+        btn.addEventListener('touchend', end);
+        btn.addEventListener('mousedown', start);
+        btn.addEventListener('mouseup', end);
+        btn.addEventListener('mouseleave', end);
+      };
+      bindBtn('btn-up', 'moveForward');
+      bindBtn('btn-down', 'moveBackward');
+      bindBtn('btn-left', 'turnLeft');
+      bindBtn('btn-right', 'turnRight');
+    }
+  </script>
+</head>
+<body>
+  <div id="start-screen">
+    <h1 style="margin-bottom:20px; font-size:32px;">لعبة قيادة السيارات AR</h1>
+    <p style="margin-bottom:40px; text-align:center; padding:0 20px; font-size: 18px;">قم بقيادة السيارة في غرفتك الحقيقية باستخدام أزرار التحكم!</p>
+    <button id="start-btn" style="padding:15px 40px; font-size:24px; border-radius:30px; background:#FFD700; color:#000; border:none; font-weight:bold; cursor:pointer;">ابدأ القيادة</button>
+  </div>
+  
+  <div id="loading-screen">جاري تشغيل الكاميرا...</div>
+  <video id="video-bg" autoplay playsinline webkit-playsinline muted></video>
+  
+  <div id="scene-container"></div>
+  
+  <div id="ui-container" style="display:none;">
+    <div class="title-banner" onclick="window.history.back()">⬅ العودة للتطبيق</div>
+    
+    <div id="controls">
+      <div id="btn-left" class="ctrl-btn">◀</div>
+      <div id="btn-up" class="ctrl-btn">▲</div>
+      <div id="btn-right" class="ctrl-btn">▶</div>
+      <div id="btn-down" class="ctrl-btn">▼</div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('start-btn').addEventListener('click', async function() {
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('loading-screen').style.display = 'flex';
+      
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        const video = document.getElementById('video-bg');
+        video.srcObject = stream;
+        
+        video.onloadedmetadata = () => {
+          document.getElementById('loading-screen').style.display = 'none';
+          document.getElementById('ui-container').style.display = 'block';
+          
+          document.getElementById('scene-container').innerHTML = `
+            <a-scene embedded renderer="alpha: true; antialias: true;" vr-mode-ui="enabled: false">
+              <a-camera position="0 1.6 0" look-controls="magicWindowTrackingEnabled: true; touchEnabled: false; mouseEnabled: false"></a-camera>
+              <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+              <a-light type="directional" color="#ffffff" intensity="0.6" position="-1 2 1"></a-light>
+              
+              <!-- Virtual World / Track -->
+              <a-entity id="world" position="0 -0.5 -3">
+                <!-- Road -->
+                <a-plane rotation="-90 0 0" width="10" height="10" color="#333" material="roughness: 0.8"></a-plane>
+                <!-- Road markings -->
+                <a-plane position="0 0.01 0" rotation="-90 0 0" width="0.2" height="10" color="#FFF" material="roughness: 0.9"></a-plane>
+                <!-- Trees -->
+                <a-cone position="-2 0.5 -2" radius-bottom="0.5" radius-top="0" height="1" color="#4CAF50"></a-cone>
+                <a-cylinder position="-2 0.25 -2" radius="0.1" height="0.5" color="#795548"></a-cylinder>
+                
+                <a-cone position="2 0.5 1" radius-bottom="0.5" radius-top="0" height="1" color="#4CAF50"></a-cone>
+                <a-cylinder position="2 0.25 1" radius="0.1" height="0.5" color="#795548"></a-cylinder>
+                
+                <!-- Building -->
+                <a-box position="-3 1 2" width="1.5" height="2" depth="1.5" color="#2196F3" material="roughness: 0.5"></a-box>
+                <a-box position="-3 2.5 2" width="1.5" height="1" depth="1.5" color="#1565C0" animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear"></a-box>
+                
+                <a-box position="3 0.75 -3" width="2" height="1.5" depth="1" color="#FF9800" material="roughness: 0.5"></a-box>
+              </a-entity>
+
+              <!-- 3D Car Model (Built with primitives) -->
+              <a-entity id="car" position="0 -0.5 -3" rotation="0 0 0" car-controller>
+                <!-- Body -->
+                <a-box position="0 0.3 0" width="1" height="0.4" depth="2" color="#E91E63" material="roughness: 0.2"></a-box>
+                <!-- Cabin -->
+                <a-box position="0 0.6 0.2" width="0.8" height="0.4" depth="1" color="#FCE4EC" opacity="0.8"></a-box>
+                <!-- Wheels -->
+                <a-cylinder position="0.6 0.1 0.6" radius="0.2" height="0.1" rotation="0 0 90" color="#212121"></a-cylinder>
+                <a-cylinder position="-0.6 0.1 0.6" radius="0.2" height="0.1" rotation="0 0 90" color="#212121"></a-cylinder>
+                <a-cylinder position="0.6 0.1 -0.6" radius="0.2" height="0.1" rotation="0 0 90" color="#212121"></a-cylinder>
+                <a-cylinder position="-0.6 0.1 -0.6" radius="0.2" height="0.1" rotation="0 0 90" color="#212121"></a-cylinder>
+                <!-- Headlights -->
+                <a-sphere position="0.3 0.3 -1" radius="0.1" color="#FFF59D"></a-sphere>
+                <a-sphere position="-0.3 0.3 -1" radius="0.1" color="#FFF59D"></a-sphere>
+                <a-light type="spot" position="0 0.3 -1" rotation="-10 180 0" color="#FFF" intensity="1" distance="10" angle="30"></a-light>
+              </a-entity>
+            </a-scene>
+          `;
+          setupControls();
+        };
+      } catch (err) {
+        document.getElementById('loading-screen').innerHTML = 'خطأ: يرجى إعطاء صلاحية الكاميرا';
+      }
+    });
+  </script>
+</body>
+</html>

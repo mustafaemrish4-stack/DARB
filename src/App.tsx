@@ -1362,16 +1362,16 @@ export default function App() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => window.location.href = `/ar-drawing.html?v=${Date.now()}`} 
-                  className="bg-brand-tertiary rounded-[2.5rem] p-8 shadow-xl border border-brand-tertiary/5 flex items-center gap-6 text-right cursor-pointer group relative overflow-hidden"
+                  onClick={() => window.location.href = `/ar-car.html?v=${Date.now()}`} 
+                  className="bg-emerald-600 rounded-[2.5rem] p-8 shadow-xl border border-emerald-600/5 flex items-center gap-6 text-right cursor-pointer group relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
                   <div className="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-lg z-10 border border-white/30">
                     <Layers size={40} />
                   </div>
                   <div className="z-10 relative">
-                    <h3 className="text-xl font-bold text-white mb-1">الرسم في الهواء (AR Track)</h3>
-                    <p className="text-xs text-white/70 font-bold">ارسم مسارات وسكك في غرفتك الحقيقية!</p>
+                    <h3 className="text-xl font-bold text-white mb-1">قيادة السيارات (AR)</h3>
+                    <p className="text-xs text-white/70 font-bold">قُد سيارة ثلاثية الأبعاد داخل غرفتك الحقيقية!</p>
                   </div>
                 </motion.button>
               </div>

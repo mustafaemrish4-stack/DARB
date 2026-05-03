@@ -17,9 +17,11 @@
       position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none;
     }
     #score-board {
-      background: rgba(255,255,255,0.9); padding: 15px 30px; border-radius: 30px;
-      margin: 20px auto; font-size: 24px; font-weight: bold; color: #E91E63;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2); pointer-events: auto; text-align: center; width: fit-content;
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+      padding: 10px 25px; border-radius: 40px; border: 2px solid rgba(255,255,255,0.2);
+      font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      pointer-events: auto; text-align: center; white-space: nowrap; display: inline-block;
     }
     .crosshair {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
