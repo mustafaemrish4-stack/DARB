@@ -173,18 +173,17 @@
         }
       }, 1000);
       
-      const checkCamera = setInterval(() => {
-        const scene = document.querySelector('a-scene');
-        if(scene) {
-          scene.addEventListener('camera-init', () => {
-            document.getElementById('loading-screen').style.display = 'none';
-          });
-          scene.addEventListener('camera-error', () => {
-            document.getElementById('loading-screen').innerHTML = 'خطأ: يرجى السماح بتشغيل الكاميرا من إعدادات المتصفح';
-          });
-          clearInterval(checkCamera);
+      const checkVideo = setInterval(() => {
+        const video = document.querySelector('video');
+        if (video && video.readyState >= 2) {
+          document.getElementById('loading-screen').style.display = 'none';
+          clearInterval(checkVideo);
         }
-      }, 100);
+        // Fallback: Just hide it after 5 seconds
+        setTimeout(() => {
+           document.getElementById('loading-screen').style.display = 'none';
+        }, 5000);
+      }, 500);
     });
   </script>
 </body>

@@ -161,9 +161,8 @@ const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, initialPl
     {
       name: 'القدس',
       type: '360',
-      image: '/360/aqsa/1.jpg',
+      image: '/360/aqsa/2.jpg',
       subPlaces: [
-        { name: 'الأقصى (1)', image: '/360/aqsa/1.jpg' },
         { name: 'الأقصى (2)', image: '/360/aqsa/2.jpg' },
         { name: 'الأقصى (3)', image: '/360/aqsa/3.jpg' },
         { name: 'الأقصى (5)', image: '/360/aqsa/5.jpg' },
