@@ -106,7 +106,30 @@
       // Add class for raycaster to the sphere so it detects the mesh
       sphere.setAttribute('class', 'clickable');
       
+
+      // Click listener for popping
+      sphere.addEventListener('click', function() {
+        score += 10;
+        document.getElementById('score-text').innerText = `النقاط: ${score}`;
+        
+        // Particle effect
+        for(let p=0; p<8; p++) {
+          const particle = document.createElement('a-entity');
+          particle.setAttribute('geometry', 'primitive: sphere; radius: 0.05');
+          particle.setAttribute('material', `color: ${color}`);
+          particle.setAttribute('position', balloon.getAttribute('position'));
+          particle.setAttribute('animation', `property: position; to: ${x + (Math.random()-0.5)} ${y + (Math.random()-0.5)} ${z + (Math.random()-0.5)}; dur: 400; easing: easeOutQuad`);
+          particle.setAttribute('animation__scale', 'property: scale; to: 0 0 0; dur: 400; easing: easeOutQuad');
+          scene.appendChild(particle);
+          setTimeout(() => { if(particle.parentNode) particle.parentNode.removeChild(particle); }, 400);
+        }
+
+        if(balloon.parentNode) balloon.parentNode.removeChild(balloon);
+        setTimeout(spawnBalloon, 1000);
+      });
+      
       // Add floating animation
+
       balloon.setAttribute('animation__wobble', `property: position; dir: alternate; dur: 2000; easing: easeInOutSine; loop: true; to: ${x+0.2} ${y} ${z}`);
       
       scene.appendChild(balloon);

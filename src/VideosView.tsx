@@ -13,12 +13,8 @@ export const VideosView = ({ onBack }: { onBack: () => void }) => {
   // Strictly 5 Videos as Requested
   // Strictly 8 Youtube VR Videos As Requested
   const videoCatalog = [
-    { id: 1, title: 'الرحلة الأولى (غابة)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4', icon: '🌲' },
-    { id: 2, title: 'الرحلة الثانية (فضاء)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4', icon: '🌌' },
-    { id: 3, title: 'الرحلة الثالثة (مغامرة)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4', icon: '🚀' },
-    { id: 4, title: 'الرحلة الرابعة (أكشن)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4', icon: '🌍' },
-    { id: 5, title: 'الرحلة الخامسة (طبيعة)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4', icon: '🦁' },
-    { id: 6, title: 'الرحلة السادسة (بحار)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4', icon: '🌊' }
+    { id: 1, title: 'فيديو 360 طبيعة (حديقة)', url: 'https://files.catbox.moe/um1562.mp4', icon: '🌲' },
+    { id: 2, title: 'فيديو 360 طبيعة (منظر)', url: 'https://files.catbox.moe/878rh8.mp4', icon: '🏞️' }
   ];
 
   return (

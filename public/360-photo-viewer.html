@@ -6,9 +6,24 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <style>
       body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #111; }
+      #fs-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border: 2px solid white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-family: sans-serif;
+        font-weight: bold;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
+    <button id="fs-btn">تكبير الشاشة</button>
     <a-scene 
       embedded 
       vr-mode-ui="enabled: true" 
@@ -25,6 +40,16 @@
       if (imgSrc) {
         document.getElementById('sky').setAttribute('src', imgSrc);
       }
+
+      document.getElementById('fs-btn').addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      });
     </script>
   </body>
 </html>

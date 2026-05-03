@@ -12,12 +12,8 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
   const [currentVideoUrl, setCurrentVideoUrl] = useState(initialVideoUrl);
 
   const videoCatalog = [
-    { id: 1, title: 'الرحلة الأولى (غابة)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4' },
-    { id: 2, title: 'الرحلة الثانية (فضاء)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4' },
-    { id: 3, title: 'الرحلة الثالثة (مغامرة)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4' },
-    { id: 4, title: 'الرحلة الرابعة (أكشن)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4' },
-    { id: 5, title: 'الرحلة الخامسة (طبيعة)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4' },
-    { id: 6, title: 'الرحلة السادسة (بحار)', url: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4' }
+    { id: 1, title: 'فيديو 360 طبيعة (حديقة)', url: 'https://files.catbox.moe/um1562.mp4' },
+    { id: 2, title: 'فيديو 360 طبيعة (منظر)', url: 'https://files.catbox.moe/878rh8.mp4' }
   ];
 
   return (
@@ -41,8 +37,9 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
         <iframe 
           src={`/360-player.html?video=${encodeURIComponent(currentVideoUrl)}`} 
           className="w-full h-full border-none outline-none"
-          allow="accelerometer; gyroscope; xr-spatial-tracking"
-          sandbox="allow-scripts allow-same-origin"
+          allow="fullscreen; accelerometer; gyroscope; xr-spatial-tracking"
+          allowFullScreen
+          sandbox="allow-scripts allow-same-origin allow-presentation"
         ></iframe>
       </div>
 

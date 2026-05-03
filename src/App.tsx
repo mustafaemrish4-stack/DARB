@@ -161,25 +161,15 @@ const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, initialPl
     {
       name: 'القدس',
       type: '360',
-      image: '/360/aqsa/1.jpg',
+      image: '/assets/jerusalem.jpg',
       subPlaces: [
-        { name: 'الأقصى (1)', image: '/360/aqsa/1.jpg' },
-        { name: 'الأقصى (2)', image: '/360/aqsa/2.jpg' },
-        { name: 'الأقصى (3)', image: '/360/aqsa/3.jpg' },
-        { name: 'الأقصى (5)', image: '/360/aqsa/5.jpg' },
-        { name: 'الأقصى (6)', image: '/360/aqsa/6.jpg' },
-        { name: 'الأقصى (7)', image: '/360/aqsa/7.jpg' },
-        { name: 'الأقصى (8)', image: '/360/aqsa/8.jpg' },
-        { name: 'الأقصى (9)', image: '/360/aqsa/9.jpg' },
-        { name: 'الأقصى (10)', image: '/360/aqsa/10.jpg' },
-        { name: 'الأقصى (11)', image: '/360/aqsa/11.jpg' },
-        { name: 'الأقصى (12)', image: '/360/aqsa/12.jpg' },
+        { name: 'القدس - المسجد الأقصى', image: '/assets/jerusalem.jpg' }
       ]
     },
-    { name: 'يافا', type: 'image', image: '/360/jaffa.jpg' },
-    { name: 'نابلس', type: 'image', image: '/360/nablus.jpg' },
-    { name: 'جنين', type: 'image', image: '/360/jenin.jpg' },
-    { name: 'غزة', type: 'image', image: '/360/gaza.jpg' },
+    { name: 'يافا', type: 'image', image: '/assets/jaffa.jpg' },
+    { name: 'نابلس', type: 'image', image: '/assets/nablus.jpg' },
+    { name: 'جنين', type: 'image', image: '/assets/jenin.jpg' },
+    { name: 'غزة', type: 'image', image: '/assets/gaza.jpg' },
   ];
 
   const [selectedMainPlace, setSelectedMainPlace] = useState<any>(
@@ -222,8 +212,9 @@ const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, initialPl
           <iframe 
             src={`/360-photo-viewer.html?image=${encodeURIComponent(selectedImage.image)}`}
             className="w-full h-full border-none"
-            allow="accelerometer; gyroscope; vr; xr-spatial-tracking"
-            sandbox="allow-scripts allow-same-origin"
+            allow="fullscreen; accelerometer; gyroscope; xr-spatial-tracking"
+            allowFullScreen
+            sandbox="allow-scripts allow-same-origin allow-presentation"
             title="360 Photo Viewer"
           />
         ) : (
@@ -924,7 +915,7 @@ export default function App() {
     { id: 1, title: 'جولة القدس 360', type: 'VR 360', image: '/assets/jerusalem.jpg', img: 'jerusalem', is360: true },
     { id: 2, title: 'نابلس 360', type: 'VR 360', image: '/assets/nablus.jpg', img: 'nablus', is360: true },
     { id: 3, title: 'يافا 360', type: 'VR 360', image: '/assets/jaffa.jpg', img: 'jaffa', is360: true },
-    { id: 4, title: 'فيديو 360 (طبيعة وفضاء)', type: 'VR Video', video: 'https://bitmovin-a.akamaihd.net/content/playhouse-vr/progressive.mp4', img: 'nature', is360: true }
+    { id: 4, title: 'فيديو 360 طبيعة', type: 'VR Video', video: 'https://files.catbox.moe/um1562.mp4', img: 'nature', is360: true }
   ];
 
   if (currentView === 'auth') {

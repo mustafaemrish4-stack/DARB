@@ -46,12 +46,27 @@
         align-items: center;
         justify-content: center;
       }
+      #fs-btn {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border: 2px solid white;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-family: sans-serif;
+        font-weight: bold;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
     <!-- Play button overlay required for mobile browsers to allow video playback -->
     <button id="play-btn">▶ تشغيل الآن</button>
     <button id="mute-btn">🔊</button>
+    <button id="fs-btn">تكبير الشاشة</button>
 
     <a-scene 
       loading-screen="dotsColor: white; backgroundColor: black" 
@@ -103,6 +118,16 @@
         playBtn.style.display = 'none';
       }).catch(e => {
         // Autoplay blocked, wait for user click
+      });
+
+      document.getElementById('fs-btn').addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+          });
+        } else {
+          document.exitFullscreen();
+        }
       });
     </script>
   </body>
