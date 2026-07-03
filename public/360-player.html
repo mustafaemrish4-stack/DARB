@@ -57,6 +57,7 @@
         border: 2px solid white;
         border-radius: 30px;
         cursor: pointer;
+        display: none;
         z-index: 9999;
         font-family: sans-serif;
         font-weight: bold;
@@ -214,6 +215,20 @@
           scene.enterVR();
         }
       });
+      
+      const sceneEl = document.querySelector('a-scene');
+      
+      function updateCloseBtn() {
+        const isFS = !!document.fullscreenElement;
+        const isVR = sceneEl && sceneEl.is('vr-mode');
+        closeBtn.style.display = (isFS || isVR) ? 'block' : 'none';
+      }
+
+      document.addEventListener('fullscreenchange', updateCloseBtn);
+      if(sceneEl) {
+        sceneEl.addEventListener('enter-vr', updateCloseBtn);
+        sceneEl.addEventListener('exit-vr', updateCloseBtn);
+      }
     </script>
   </body>
 </html>
