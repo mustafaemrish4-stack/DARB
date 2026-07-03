@@ -16,10 +16,10 @@ export const VideosView = ({ onBack }: { onBack: () => void }) => {
     { id: 3, title: 'فيديو 3 (عالي الجودة)', url: 'https://files.catbox.moe/ccur6d.mp4', icon: '🌌' },
     { id: 4, title: 'فيديو 4 (عالي الجودة)', url: 'https://files.catbox.moe/lr2or2.mp4', icon: '🚀' },
     { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4', icon: '🌍' },
-    { id: 6, title: 'فيديو 360: جنين (1)', url: '/360/videos/jenin1.mp4', icon: '🎥' },
-    { id: 7, title: 'فيديو 360: جنين (2)', url: '/360/videos/jenin2.mp4', icon: '🎥' },
+    { id: 6, title: 'فيديو 360: جنين (1)', url: 'https://youtu.be/oL-S2Kw49_Y?si=nISn1WKNuXNB2pBZ', icon: '🎥' },
+    { id: 7, title: 'فيديو 360: جنين (2)', url: 'https://youtu.be/EnwQ8v2wlAQ?si=usIhDfUy3xThEqrr', icon: '🎥' },
     { id: 8, title: 'فيديو 360: جنين (3)', url: 'https://files.catbox.moe/clfxwt.mp4', icon: '🎥' },
-    { id: 9, title: 'فيديو 360: جنين (4)', url: '/360/videos/jenin4.mp4', icon: '🎥' },
+    { id: 9, title: 'فيديو 360: جنين (4)', url: 'https://youtu.be/0oUxB9bKkGM?si=l66Nwql0RBrp6viU', icon: '🎥' },
     { id: 10, title: 'فيديو 360: جنين (5)', url: 'https://files.catbox.moe/3bstuf.mp4', icon: '🎥' }
   ];
 
@@ -47,7 +47,13 @@ export const VideosView = ({ onBack }: { onBack: () => void }) => {
          {videoCatalog.map((vid) => (
             <motion.div 
                key={vid.id}
-               onClick={() => setVrVideoUrl(vid.url)}
+               onClick={() => {
+                 if (vid.url.includes('youtu')) {
+                   window.open(vid.url, '_blank');
+                 } else {
+                   setVrVideoUrl(vid.url);
+                 }
+               }}
                whileHover={{ scale: 1.01 }}
                whileTap={{ scale: 0.99 }}
                className="bg-white rounded-3xl p-4 flex items-center gap-4 shadow-sm border border-brand-deep/5 cursor-pointer"

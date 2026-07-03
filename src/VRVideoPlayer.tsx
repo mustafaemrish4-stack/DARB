@@ -27,10 +27,10 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
     { id: 3, title: 'فيديو 3 (عالي الجودة)', url: 'https://files.catbox.moe/ccur6d.mp4', isStereo: false },
     { id: 4, title: 'فيديو 4 (عالي الجودة)', url: 'https://files.catbox.moe/lr2or2.mp4', isStereo: false },
     { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4', isStereo: false },
-    { id: 6, title: 'فيديو 360: جنين (1)', url: '/360/videos/jenin1.mp4', isStereo: true },
-    { id: 7, title: 'فيديو 360: جنين (2)', url: '/360/videos/jenin2.mp4', isStereo: false },
+    { id: 6, title: 'فيديو 360: جنين (1)', url: 'https://youtu.be/oL-S2Kw49_Y?si=nISn1WKNuXNB2pBZ', isStereo: true },
+    { id: 7, title: 'فيديو 360: جنين (2)', url: 'https://youtu.be/EnwQ8v2wlAQ?si=usIhDfUy3xThEqrr', isStereo: false },
     { id: 8, title: 'فيديو 360: جنين (3)', url: 'https://files.catbox.moe/clfxwt.mp4', isStereo: true },
-    { id: 9, title: 'فيديو 360: جنين (4)', url: '/360/videos/jenin4.mp4', isStereo: false },
+    { id: 9, title: 'فيديو 360: جنين (4)', url: 'https://youtu.be/0oUxB9bKkGM?si=l66Nwql0RBrp6viU', isStereo: false },
     { id: 10, title: 'فيديو 360: جنين (5)', url: 'https://files.catbox.moe/3bstuf.mp4', isStereo: true }
   ];
 
@@ -68,7 +68,13 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
           {videoCatalog.map((vid) => (
             <button 
               key={vid.id}
-              onClick={() => setCurrentVideoUrl(vid.url)}
+              onClick={() => {
+                if (vid.url.includes('youtu')) {
+                  window.open(vid.url, '_blank');
+                } else {
+                  setCurrentVideoUrl(vid.url);
+                }
+              }}
               className={cn(
                 "px-6 py-3 rounded-full text-xs font-bold transition-all border flex items-center gap-2",
                 currentVideoUrl === vid.url 
