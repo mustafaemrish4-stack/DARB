@@ -11,13 +11,30 @@ interface VRVideoPlayerProps {
 export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) => {
   const [currentVideoUrl, setCurrentVideoUrl] = useState(initialVideoUrl);
 
+  React.useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data === 'close-vr') {
+        onClose();
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [onClose]);
+
   const videoCatalog = [
-    { id: 1, title: 'فيديو 1 (عالي الجودة)', url: 'https://files.catbox.moe/smdqsi.mp4' },
-    { id: 2, title: 'فيديو 2 (عالي الجودة)', url: 'https://files.catbox.moe/g6l3da.mp4' },
-    { id: 3, title: 'فيديو 3 (عالي الجودة)', url: 'https://files.catbox.moe/ccur6d.mp4' },
-    { id: 4, title: 'فيديو 4 (عالي الجودة)', url: 'https://files.catbox.moe/lr2or2.mp4' },
-    { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4' }
+    { id: 1, title: 'فيديو 1 (عالي الجودة)', url: 'https://files.catbox.moe/smdqsi.mp4', isStereo: false },
+    { id: 2, title: 'فيديو 2 (عالي الجودة)', url: 'https://files.catbox.moe/g6l3da.mp4', isStereo: false },
+    { id: 3, title: 'فيديو 3 (عالي الجودة)', url: 'https://files.catbox.moe/ccur6d.mp4', isStereo: false },
+    { id: 4, title: 'فيديو 4 (عالي الجودة)', url: 'https://files.catbox.moe/lr2or2.mp4', isStereo: false },
+    { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4', isStereo: false },
+    { id: 6, title: 'فيديو 360: جنين (1)', url: '/360/videos/jenin1.mp4', isStereo: true },
+    { id: 7, title: 'فيديو 360: جنين (2)', url: '/360/videos/jenin2.mp4', isStereo: false },
+    { id: 8, title: 'فيديو 360: جنين (3)', url: '/360/videos/jenin3.mp4', isStereo: true },
+    { id: 9, title: 'فيديو 360: جنين (4)', url: '/360/videos/jenin4.mp4', isStereo: false },
+    { id: 10, title: 'فيديو 360: جنين (5)', url: '/360/videos/jenin5.mp4', isStereo: true }
   ];
+
+  const currentVideo = videoCatalog.find(v => v.url === currentVideoUrl) || videoCatalog[0];
 
   return (
     <motion.div
@@ -35,14 +52,13 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
         </button>
       </div>
 
-      {/* Sandboxed iFrame to prevent any React / Vite / WebGL conflicts */}
+      {/* iFrame to prevent any React / Vite / WebGL conflicts */}
       <div className="flex-1 relative bg-black w-full h-full">
         <iframe 
-          src={`/360-player.html?v=${Date.now()}&video=${encodeURIComponent(currentVideoUrl)}`} 
+          src={`/360-player.html?v=${Date.now()}&video=${encodeURIComponent(currentVideoUrl)}&stereo=${currentVideo.isStereo ? 'true' : 'false'}`} 
           className="w-full h-full border-none"
           allow="fullscreen; accelerometer; gyroscope; xr-spatial-tracking; display-capture; autoplay; encrypted-media"
           allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
           title="360 Video Player"
         />
       </div>

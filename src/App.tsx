@@ -6,7 +6,7 @@ import {
   ChevronLeft, Heart, Share2, Info, Headphones, Trophy, Medal, TrendingUp,
   Eye, Volume2, Layers, Map as MapLucide, Star, Moon, Sun, Bell, HelpCircle
 } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense, lazy } from "react";
 import { cn } from "./lib/utils";
 
 import { AITutorContent } from './AITutorContent';
@@ -17,6 +17,7 @@ import { LullabiesView } from './LullabiesView';
 import confetti from "canvas-confetti";
 import { CartoonMap } from './CartoonMap';
 import { QuizGame } from './QuizGame';
+const JeninGame = lazy(() => import('./games/JeninGame/JeninGame'));
 import L from 'leaflet';
 import { audioData } from "./audioData";
 import { englishAudioData } from "./englishAudioData";
@@ -175,10 +176,21 @@ const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, initialPl
         { name: 'الأقصى (12)', image: '/360/aqsa/12.jpg' },
       ]
     },
-    { name: 'يافا', type: 'image', image: '/assets/jaffa.jpg' },
-    { name: 'نابلس', type: 'image', image: '/assets/nablus.jpg' },
-    { name: 'جنين', type: 'image', image: '/assets/jenin.jpg' },
-    { name: 'غزة', type: 'image', image: '/assets/gaza.jpg' },
+    { name: 'يافا', type: 'image', image: '/360/jaffa.jpg' },
+    { name: 'نابلس', type: 'image', image: '/360/nablus.jpg' },
+    { 
+      name: 'جنين', 
+      type: '360', 
+      image: '/360/1.JPG',
+      subPlaces: [
+        { name: 'جنين (1)', image: '/360/1.JPG' },
+        { name: 'جنين (2)', image: '/360/2.JPG' },
+        { name: 'جنين (3)', image: '/360/3.JPG' },
+        { name: 'جنين (4)', image: '/360/4.JPG' },
+        { name: 'جنين (5)', image: '/360/5.JPG' }
+      ]
+    },
+    { name: 'غزة', type: 'image', image: '/360/gaza.jpg' },
   ];
 
   const [selectedMainPlace, setSelectedMainPlace] = useState<any>(
@@ -222,8 +234,6 @@ const VirtualTour = ({ onClose, initialPlace }: { onClose: () => void, initialPl
             src={`/360-photo-viewer.html?v=${Date.now()}&image=${encodeURIComponent(selectedImage.image)}`}
             className="w-full h-full border-none"
             allow="fullscreen; accelerometer; gyroscope; xr-spatial-tracking"
-            allowFullScreen
-            sandbox="allow-scripts allow-same-origin allow-presentation"
             title="360 Photo Viewer"
           />
         ) : (
@@ -607,10 +617,12 @@ const MemoryGame = ({ onClose }: { onClose: () => void }) => {
                 >
                   {/* Front (Hidden state) */}
                   <div 
-                    className="absolute inset-0 bg-brand-deep rounded-2xl shadow-md border-[3px] border-white/20 backface-hidden flex items-center justify-center"
+                    className="absolute inset-0 bg-brand-cream rounded-2xl shadow-md border-[3px] border-white/50 backface-hidden flex items-center justify-center"
                     style={{ backfaceVisibility: 'hidden' }}
                   >
-                    <DarbFlower className="w-1/2 h-1/2 opacity-50 grayscale" />
+                    <div className="w-2/3 h-2/3 flex items-center justify-center dark:bg-white/90 dark:rounded-full dark:p-2">
+                      <img src="/icon_perfect.png" alt="Darb Logo" className="w-full h-full object-contain opacity-70" />
+                    </div>
                   </div>
                   
                   <div 
@@ -893,6 +905,8 @@ export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'parent'|'child'|null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLullabyMode, setIsLullabyMode] = useState(false);
+  const [isJeninGameOpen, setIsJeninGameOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isParentMode, setIsParentMode] = useState(false);
@@ -1196,7 +1210,7 @@ export default function App() {
 
                   {/* Section 1.5: Lullabies */}
                   <section>
-                    <h3 className="text-xl font-bold text-brand-deep mb-4 border-r-4 border-[#5C2A9D] pr-3">تهويدات درب</h3>
+                    <h3 className="text-xl font-bold text-brand-deep mb-4 border-r-4 border-[#5C2A9D] pr-3">هدهدة درب</h3>
                     <motion.div 
                       whileHover={{ y: -5 }}
                       onClick={() => setIsLullabiesOpen(true)}
@@ -1207,7 +1221,7 @@ export default function App() {
                           <Moon size={24} />
                         </div>
                         <h4 className="text-white text-2xl font-bold mb-2">رحلة لعالم الأحلام</h4>
-                        <p className="text-white/70 text-sm font-medium">موسيقى هادئة وتهويدات لجميع الأعمار</p>
+                        <p className="text-white/70 text-sm font-medium">موسيقى هادئة وهدهدة لجميع الأعمار</p>
                       </div>
                       <div className="absolute right-0 bottom-0 top-0 w-32 bg-gradient-to-l from-white/10 to-transparent"></div>
                       <div className="absolute top-4 left-6 text-2xl animate-pulse">⭐</div>
@@ -1359,19 +1373,37 @@ export default function App() {
                   </div>
                 </motion.button>
 
+                <div className="w-full h-px bg-brand-black/10 my-4" />
+
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => window.location.href = `/ar-car.html?v=${Date.now()}`} 
+                  onClick={() => window.open('/ar-stars.html', '_blank')} 
+                  className="bg-purple-600 rounded-[2.5rem] p-8 shadow-xl border border-purple-600/5 flex items-center gap-6 text-right cursor-pointer group relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+                  <div className="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-lg z-10 border border-white/30">
+                    <Gamepad2 size={40} />
+                  </div>
+                  <div className="z-10 relative">
+                    <h3 className="text-xl font-bold text-white mb-1">صائد النجوم (AR)</h3>
+                    <p className="text-xs text-white/70 font-bold">ابحث عن النجوم المضيئة في غرفتك واجمعها!</p>
+                  </div>
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setIsJeninGameOpen(true)} 
                   className="bg-emerald-600 rounded-[2.5rem] p-8 shadow-xl border border-emerald-600/5 flex items-center gap-6 text-right cursor-pointer group relative overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
                   <div className="w-20 h-20 rounded-3xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white shadow-lg z-10 border border-white/30">
-                    <Layers size={40} />
+                    <MapLucide size={40} />
                   </div>
                   <div className="z-10 relative">
-                    <h3 className="text-xl font-bold text-white mb-1">قيادة السيارات (AR)</h3>
-                    <p className="text-xs text-white/70 font-bold">قُد سيارة ثلاثية الأبعاد داخل غرفتك الحقيقية!</p>
+                    <h3 className="text-xl font-bold text-white mb-1">عالم جنين (3D)</h3>
+                    <p className="text-xs text-white/70 font-bold">تجول في معالم مدينة جنين ثلاثية الأبعاد!</p>
                   </div>
                 </motion.button>
               </div>
@@ -1668,6 +1700,23 @@ export default function App() {
       {/* Lullabies Overlay */}
       <AnimatePresence>
         {isLullabiesOpen && <LullabiesView onClose={() => setIsLullabiesOpen(false)} />}
+      </AnimatePresence>
+
+      {/* Jenin 3D Game Overlay */}
+      <AnimatePresence>
+        {isJeninGameOpen && (
+          <div className="fixed inset-0 z-[200] bg-white">
+            <button 
+              onClick={() => setIsJeninGameOpen(false)}
+              className="absolute top-4 right-4 z-[210] w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg text-brand-deep hover:bg-brand-deep hover:text-white transition-all"
+            >
+              <X size={24} />
+            </button>
+            <Suspense fallback={<div className="flex items-center justify-center w-full h-full text-2xl font-bold text-brand-deep">جاري تحميل اللعبة ثلاثية الأبعاد...</div>}>
+              <JeninGame />
+            </Suspense>
+          </div>
+        )}
       </AnimatePresence>
     </div>
   );

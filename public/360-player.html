@@ -46,6 +46,22 @@
         align-items: center;
         justify-content: center;
       }
+      #close-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: rgba(255, 0, 0, 0.8);
+        color: white;
+        border: 2px solid white;
+        border-radius: 30px;
+        cursor: pointer;
+        z-index: 9999;
+        font-family: sans-serif;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      }
       #fs-btn, #vr-btn {
         position: absolute;
         top: 20px;
@@ -76,6 +92,7 @@
     <!-- Play button overlay required for mobile browsers to allow video playback -->
     <button id="play-btn">▶ تشغيل الآن</button>
     <button id="mute-btn">🔊</button>
+    <button id="close-btn">❌ خروج</button>
     <button id="fs-btn">تكبير الشاشة</button>
     <button id="vr-btn">وضع VR Box</button>
 
@@ -99,15 +116,48 @@
     </a-scene>
 
     <script>
+      AFRAME.registerComponent('stereo-video', {
+        schema: {
+          isTopBottom: { type: 'boolean', default: false }
+        },
+        init: function () {
+          this.hasCropped = false;
+        },
+        tick: function () {
+          if (!this.data.isTopBottom || this.hasCropped) return;
+          const mesh = this.el.getObject3D('mesh');
+          if (mesh && mesh.material && mesh.material.map) {
+            mesh.material.map.repeat.set(1, 0.5);
+            mesh.material.map.offset.set(0, 0.5);
+            this.hasCropped = true;
+          }
+        }
+      });
+      
       const urlParams = new URLSearchParams(window.location.search);
       const vidSrc = urlParams.get('video');
+      const isStereo = urlParams.get('stereo') === 'true';
       const video = document.getElementById('vid');
       const playBtn = document.getElementById('play-btn');
       const muteBtn = document.getElementById('mute-btn');
+      const closeBtn = document.getElementById('close-btn');
+
+      if (isStereo) {
+        document.querySelector('a-videosphere').setAttribute('stereo-video', 'isTopBottom: true');
+      }
 
       if (vidSrc) {
         video.src = vidSrc;
         video.load();
+        
+        // Force Jenin videos 1 to 5 to start at 60 seconds (1 minute mark)
+        if (vidSrc.includes('jenin1.mp4') || vidSrc.includes('jenin2.mp4') || 
+            vidSrc.includes('jenin3.mp4') || vidSrc.includes('jenin4.mp4') || 
+            vidSrc.includes('jenin5.mp4')) {
+          video.addEventListener('loadedmetadata', () => {
+            video.currentTime = 60;
+          });
+        }
       }
 
       playBtn.addEventListener('click', () => {
@@ -124,12 +174,29 @@
         muteBtn.textContent = video.muted ? '🔇' : '🔊';
       });
 
+      closeBtn.addEventListener('click', () => {
+        // Stop video
+        video.pause();
+        // Exit VR if in VR
+        const scene = document.querySelector('a-scene');
+        if (scene && scene.is('vr-mode')) {
+          scene.exitVR();
+        }
+        // Tell React app to close
+        window.parent.postMessage('close-vr', '*');
+      });
+
       // Try autoplay (might work on desktop)
       video.play().then(() => {
         playBtn.style.display = 'none';
+        muteBtn.style.display = 'flex';
       }).catch(e => {
         // Autoplay blocked, wait for user click
       });
+      
+      // When entering VR, standard HTML elements are hidden on some headsets/browsers.
+      // This is native behavior of WebXR, you can't bypass it without drawing UI in WebGL.
+      // We will just let users exit VR natively (ESC / Back gesture).
 
       document.getElementById('fs-btn').addEventListener('click', () => {
         if (!document.fullscreenElement) {

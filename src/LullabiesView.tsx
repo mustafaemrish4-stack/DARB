@@ -140,7 +140,7 @@ export const LullabiesView = ({ onClose }: { onClose: () => void }) => {
           <ChevronLeft size={24} className="rotate-180" />
         </button>
         <div className="text-center">
-          <h2 className="text-3xl font-serif font-bold text-white tracking-wide drop-shadow-lg">تهويدات درب</h2>
+          <h2 className="text-3xl font-serif font-bold text-white tracking-wide drop-shadow-lg">هدهدة درب</h2>
           <span className="text-[11px] font-bold text-[#FFD700] tracking-widest uppercase mt-2 block drop-shadow-md">ألحان تراثية هادئة</span>
         </div>
         <div className="w-12 h-12" />

@@ -15,7 +15,12 @@ export const VideosView = ({ onBack }: { onBack: () => void }) => {
     { id: 2, title: 'فيديو 2 (عالي الجودة)', url: 'https://files.catbox.moe/g6l3da.mp4', icon: '🏞️' },
     { id: 3, title: 'فيديو 3 (عالي الجودة)', url: 'https://files.catbox.moe/ccur6d.mp4', icon: '🌌' },
     { id: 4, title: 'فيديو 4 (عالي الجودة)', url: 'https://files.catbox.moe/lr2or2.mp4', icon: '🚀' },
-    { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4', icon: '🌍' }
+    { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4', icon: '🌍' },
+    { id: 6, title: 'فيديو 360: جنين (1)', url: '/360/videos/jenin1.mp4', icon: '🎥' },
+    { id: 7, title: 'فيديو 360: جنين (2)', url: '/360/videos/jenin2.mp4', icon: '🎥' },
+    { id: 8, title: 'فيديو 360: جنين (3)', url: '/360/videos/jenin3.mp4', icon: '🎥' },
+    { id: 9, title: 'فيديو 360: جنين (4)', url: '/360/videos/jenin4.mp4', icon: '🎥' },
+    { id: 10, title: 'فيديو 360: جنين (5)', url: '/360/videos/jenin5.mp4', icon: '🎥' }
   ];
 
   return (

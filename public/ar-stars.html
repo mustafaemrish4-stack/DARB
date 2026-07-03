@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AR Stars Catcher Game</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <style>
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; font-family: sans-serif; }
+    #video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+    #scene-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+    #ui-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+    
+    #score-board {
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+      padding: 10px 25px; border-radius: 40px; border: 2px solid rgba(255,255,255,0.2);
+      font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      pointer-events: auto; text-align: center; white-space: nowrap; display: inline-block;
+    }
+    
+    #start-screen { position:absolute; top:0; left:0; width:100%; height:100%; background:#1A1B4B; z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; }
+    #loading-screen { position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9000; display:none; flex-direction:column; align-items:center; justify-content:center; color:white; font-size:20px; }
+    
+    .crosshair {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.5); border-radius: 50%;
+      pointer-events: none;
+    }
+    .crosshair::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 6px; height: 6px; background: white; border-radius: 50%; }
+    
+    #back-btn {
+      position: absolute; top: 20px; left: 20px;
+      background: rgba(41, 121, 255, 0.9); padding: 8px 15px; border-radius: 20px; color: white;
+      font-weight: bold; text-align: center; border: 2px solid white; pointer-events: auto; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="start-screen">
+    <h1 style="margin-bottom:20px; font-size:32px;">صائد النجوم المضيئة AR</h1>
+    <p style="margin-bottom:40px; text-align:center; padding:0 20px; font-size: 18px;">اجمع النجوم اللامعة من حولك في غرفتك، واستمتع بتجربة سحرية!</p>
+    <button id="start-btn" style="padding:15px 40px; font-size:24px; border-radius:30px; background:#FFD700; color:#000; border:none; font-weight:bold; cursor:pointer;">ابدأ المغامرة</button>
+  </div>
+  
+  <div id="loading-screen">جاري تشغيل الكاميرا...</div>
+  <video id="video-bg" autoplay playsinline webkit-playsinline muted></video>
+  
+  <div id="scene-container"></div>
+  
+  <div id="ui-container" style="display:none;">
+    <div id="back-btn" onclick="window.close(); window.location.href = '/'">⬅ عودة</div>
+    <div id="score-board">النجوم المجمعة: <span id="score-val">0</span> ⭐</div>
+    <div class="crosshair"></div>
+  </div>
+
+  <script>
+    let score = 0;
+
+    AFRAME.registerComponent('star-target', {
+      init: function () {
+        this.el.addEventListener('click', () => {
+          score += 10;
+          document.getElementById('score-val').innerText = score;
+          
+          // Animate scale down before removing
+          this.el.setAttribute('animation__scale', 'property: scale; to: 0 0 0; dur: 200; easing: easeInQuad');
+          setTimeout(() => {
+            if(this.el.parentNode) this.el.parentNode.removeChild(this.el);
+            spawnStar(); // Spawn a new one to keep the game going
+          }, 200);
+        });
+      }
+    });
+
+    function spawnStar() {
+      const scene = document.querySelector('a-scene');
+      if (!scene) return;
+
+      const star = document.createElement('a-entity');
+      
+      // Random position around the user (Radius 2 to 5 meters)
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 2 + Math.random() * 3;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+      const y = -1 + Math.random() * 3; // From ground to slightly above head
+      
+      star.setAttribute('position', `${x} ${y} ${z}`);
+      
+      // We use a dodecahedron to look like a shiny gem/star
+      star.setAttribute('geometry', 'primitive: dodecahedron; radius: 0.3');
+      
+      // Give it a random bright color
+      const colors = ['#FFD700', '#FF4081', '#00E5FF', '#76FF03', '#E040FB'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      star.setAttribute('material', `color: ${color}; metalness: 0.6; roughness: 0.2; emissive: ${color}; emissiveIntensity: 0.4`);
+      
+      // Add rotation animation so it spins beautifully
+      star.setAttribute('animation', 'property: rotation; to: 0 360 0; loop: true; dur: 3000; easing: linear');
+      
+      // Float animation (up and down)
+      const floatY = y + 0.3;
+      star.setAttribute('animation__float', `property: position; to: ${x} ${floatY} ${z}; dir: alternate; loop: true; dur: 1500; easing: easeInOutSine`);
+      
+      star.setAttribute('star-target', '');
+      star.setAttribute('class', 'clickable'); // Needed for raycaster
+      
+      scene.appendChild(star);
+    }
+
+    document.getElementById('start-btn').addEventListener('click', async function() {
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('loading-screen').style.display = 'flex';
+      
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        const video = document.getElementById('video-bg');
+        video.srcObject = stream;
+        
+        video.onloadedmetadata = () => {
+          document.getElementById('loading-screen').style.display = 'none';
+          document.getElementById('ui-container').style.display = 'block';
+          
+          document.getElementById('scene-container').innerHTML = `
+            <a-scene embedded renderer="alpha: true; antialias: true;" vr-mode-ui="enabled: false">
+              <a-camera position="0 1.6 0" look-controls="magicWindowTrackingEnabled: true; touchEnabled: false; mouseEnabled: false">
+                <!-- Fuse cursor for clicking just by looking + tapping -->
+                <a-entity cursor="fuse: false; rayOrigin: mouse;" raycaster="objects: .clickable"></a-entity>
+              </a-camera>
+              <a-light type="ambient" color="#ffffff" intensity="0.8"></a-light>
+              <a-light type="directional" color="#ffffff" intensity="0.6" position="-1 2 1"></a-light>
+            </a-scene>
+          `;
+          
+          // Spawn 8 initial stars
+          for(let i=0; i<8; i++){
+            setTimeout(spawnStar, i * 200);
+          }
+        };
+      } catch (err) {
+        document.getElementById('loading-screen').innerHTML = 'خطأ: يرجى إعطاء صلاحية الكاميرا للعب';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AR Game</title>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -22,6 +23,11 @@
       padding: 10px 25px; border-radius: 40px; border: 2px solid rgba(255,255,255,0.2);
       font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
       pointer-events: auto; text-align: center; white-space: nowrap; display: inline-block;
+    }
+    #back-btn {
+      position: absolute; top: 20px; left: 20px;
+      background: rgba(41, 121, 255, 0.9); padding: 8px 15px; border-radius: 20px; color: white;
+      font-weight: bold; text-align: center; border: 2px solid white; pointer-events: auto; cursor: pointer; z-index: 100;
     }
     .crosshair {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -129,6 +135,7 @@
   <div id="scene-container"></div>
   
   <div id="ui-container" style="display:none;">
+    <div id="back-btn" onclick="window.location.href = '/'">⬅ عودة</div>
     <div id="score-board"><span id="score-text">النقاط: 0</span> 🎈</div>
     <div class="crosshair"></div>
   </div>

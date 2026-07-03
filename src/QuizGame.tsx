@@ -1,30 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trophy, AlertCircle, ArrowRight, Star, Heart } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { cn } from './lib/utils';
 
 export const QuizGame = ({ onClose }: { onClose: () => void }) => {
-    const questions = [
-      {
-        q: 'أين يقع المسجد الأقصى؟',
-        options: ['القدس', 'عكا', 'حيفا', 'نابلس'],
-        correct: 0,
-        hint: 'مدينة السلام الأبدية'
-      },
-      {
-        q: 'ما هي عاصمة فلسطين؟',
-        options: ['يافا', 'القدس', 'غزة', 'جنين'],
-        correct: 1,
-        hint: 'زهرة المدائن'
-      },
-      {
-        q: 'بماذا تشتهر مدينة الخليل؟',
-        options: ['البحر', 'صناعة الزجاج والجلود', 'التفاح', 'الموز'],
-        correct: 1,
-        hint: 'صناعة يدوية قديمة وملونة'
-      }
-    ];
+    const [questions, setQuestions] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      fetch('/questions.json')
+        .then(res => res.json())
+        .then(data => {
+          const shuffled = [...data].sort(() => 0.5 - Math.random());
+          setQuestions(shuffled.slice(0, 1000));
+          setIsLoading(false);
+        })
+        .catch(err => {
+          console.error(err);
+          setIsLoading(false);
+        });
+    }, []);
 
     const [currentQ, setCurrentQ] = useState(0);
     const [score, setScore] = useState(0);
@@ -65,6 +61,9 @@ export const QuizGame = ({ onClose }: { onClose: () => void }) => {
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#E5F1E3]/90 backdrop-blur-md">
+        {isLoading || questions.length === 0 ? (
+          <div className="animate-spin text-brand-green"><Star size={40} /></div>
+        ) : (
         <motion.div
           initial={{ scale: 0.8, y: 50, opacity: 0 }}
           animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -163,6 +162,7 @@ export const QuizGame = ({ onClose }: { onClose: () => void }) => {
             )}
           </AnimatePresence>
         </motion.div>
+        )}
       </div>
     );
   };
