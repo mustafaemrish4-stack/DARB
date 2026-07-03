@@ -29,9 +29,9 @@ export const VRVideoPlayer = ({ initialVideoUrl, onClose }: VRVideoPlayerProps) 
     { id: 5, title: 'فيديو 5 (عالي الجودة)', url: 'https://files.catbox.moe/8h3h4o.mp4', isStereo: false },
     { id: 6, title: 'فيديو 360: جنين (1)', url: '/360/videos/jenin1.mp4', isStereo: true },
     { id: 7, title: 'فيديو 360: جنين (2)', url: '/360/videos/jenin2.mp4', isStereo: false },
-    { id: 8, title: 'فيديو 360: جنين (3)', url: '/360/videos/jenin3.mp4', isStereo: true },
+    { id: 8, title: 'فيديو 360: جنين (3)', url: 'https://files.catbox.moe/clfxwt.mp4', isStereo: true },
     { id: 9, title: 'فيديو 360: جنين (4)', url: '/360/videos/jenin4.mp4', isStereo: false },
-    { id: 10, title: 'فيديو 360: جنين (5)', url: '/360/videos/jenin5.mp4', isStereo: true }
+    { id: 10, title: 'فيديو 360: جنين (5)', url: 'https://files.catbox.moe/3bstuf.mp4', isStereo: true }
   ];
 
   const currentVideo = videoCatalog.find(v => v.url === currentVideoUrl) || videoCatalog[0];
