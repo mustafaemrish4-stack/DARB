@@ -1327,9 +1327,27 @@ class AIClient {
         }
 
 
+        // 0.0 CUSTOM BACKEND (Agent-Reach & Unlimited-OCR)
+        if (await tryLayer(async () => {
+            const res = await fetch("http://64.226.80.41:8000/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    messages: messages.map(m => ({ role: m.role, content: m.content || (hasImage ? "[Image Provided]" : "") })),
+                    use_agent_reach: true
+                })
+            });
+            if (!res.ok) throw new Error("Custom backend failed");
+            const data = await res.json();
+            const text = data.choices?.[0]?.message?.content || "";
+            if (!text.trim()) throw new Error("Empty backend response");
+            interceptCallbacks.onChunk(text);
+            interceptCallbacks.onComplete?.(text);
+        })) return;
+
         // 0. DAHL (moonshotai/Kimi-K2.6) - Primary API
         const dKey = getDahlKey();
-        if (dKey && !hasImage) {
+        if (dKey) {
             if (await tryLayer(async () => {
                 try {
                     const t = await this.callDahl(messages, sysPrompt, dKey);
