@@ -635,7 +635,6 @@ class AIClient {
         const model = genAIInstance.getGenerativeModel({
             model: "gemini-2.0-flash",
             systemInstruction: sysPrompt,
-            tools: [{ googleSearch: {} }],
         });
 
         // 🚀 BULLETPROOF: Merge all chat history into a single 'user' message block to completely eliminate 400 Role/History validation errors.
@@ -1108,6 +1107,27 @@ class AIClient {
         return text;
     }
 
+    private async callPollinationsSearch(messages: AIChatMessage[], sysPrompt: string): Promise<string> {
+        const { messages: sm, sysPrompt: ssp } = this.shrinkForPollinations(messages, sysPrompt);
+        const formattedMessages = this.buildOpenAIMessages(sm, ssp);
+
+        const res = await fetch("https://text.pollinations.ai/openai", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                messages: formattedMessages,
+                model: "searchgpt"
+            })
+        });
+        if (!res.ok) throw new Error("Pollinations Search failed");
+        const data = await res.json();
+        let text = stripProviderNoise(data.choices?.[0]?.message?.content || "");
+        if (!text || text.length < 3) throw new Error("Pollinations returned empty");
+        return text;
+    }
+
     private async callDevToolBoxText(messages: AIChatMessage[], sysPrompt: string): Promise<string> {
         const fullPrompt = `${sysPrompt}\n\n` + messages.map(m => `${m.role}: ${m.content}`).join("\n");
         const res = await fetch('https://devtoolbox-api.devtoolbox-api.workers.dev/ai/generate', {
@@ -1185,6 +1205,12 @@ class AIClient {
                 cooldownDahlKey(dKey);
             }
         }
+
+        // 0.1 FREE LIVE WEB SEARCH (Pollinations searchgpt)
+        try {
+            const t = await this.callPollinationsSearch(messages, sysPrompt);
+            return stripProviderNoise(t);
+        } catch { }
 
         try {
             const t = await this.callPuter(messages, sysPrompt);
