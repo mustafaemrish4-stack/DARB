@@ -1157,6 +1157,35 @@ class AIClient {
             }
         }
 
+        // 0.0 CUSTOM BACKEND (Agent-Reach & Unlimited-OCR)
+        try {
+            const res = await fetch("http://64.226.80.41:8000/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    messages: messages.map(m => ({ role: m.role, content: m.content })),
+                    use_agent_reach: true
+                })
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const text = data.choices?.[0]?.message?.content || "";
+                if (text.trim()) return stripProviderNoise(text);
+            }
+        } catch { }
+
+        // 0. DAHL (moonshotai/Kimi-K2.6) - Primary API
+        const dKey = getDahlKey();
+        if (dKey) {
+            try {
+                const t = await this.callDahl(messages, sysPrompt, dKey);
+                const cleanT = stripProviderNoise(t);
+                if (cleanT.trim()) return cleanT;
+            } catch (e: any) {
+                cooldownDahlKey(dKey);
+            }
+        }
+
         try {
             const t = await this.callPuter(messages, sysPrompt);
             return stripProviderNoise(t);
@@ -1179,6 +1208,10 @@ class AIClient {
 
         const pb = getPollinationsBearer();
         if (pb) {
+            try {
+                const t = await this.callGenPollinations(messages, sysPrompt, pb, "gemini-search");
+                return stripProviderNoise(t);
+            } catch { }
             try {
                 const t = await this.callGenPollinations(messages, sysPrompt, pb, "openai-large");
                 return stripProviderNoise(t);
