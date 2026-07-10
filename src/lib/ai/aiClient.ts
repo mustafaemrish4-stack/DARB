@@ -405,6 +405,18 @@ class AIClient {
         void this.streamGemini;
     }
 
+
+    private async callDahl(messages: AIChatMessage[], sysPrompt: string, key: string): Promise<string> {
+        const formatted = this.buildOpenAIMessages(messages, sysPrompt);
+        const res = await fetch('https://inference.dahl.global/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: 'moonshotai/Kimi-K2.6', messages: formatted, max_tokens: 4000 })
+        });
+        if (!res.ok) throw new Error('Dahl failed: ' + res.status);
+        const data = await res.json();
+        return data.choices?.[0]?.message?.content || '';
+    }
     // ─── Helpers ───────────────────────────────────────
     private isPuterAvailable(): boolean {
         try {
@@ -623,6 +635,7 @@ class AIClient {
         const model = genAIInstance.getGenerativeModel({
             model: "gemini-2.0-flash",
             systemInstruction: sysPrompt,
+            tools: [{ googleSearch: {} }],
         });
 
         // 🚀 BULLETPROOF: Merge all chat history into a single 'user' message block to completely eliminate 400 Role/History validation errors.
@@ -1313,6 +1326,23 @@ class AIClient {
             // (like ChatAnywhere or GitHub Models) which natively support vision via their updated conditions.
         }
 
+
+        // 0. DAHL (moonshotai/Kimi-K2.6) - Primary API
+        const dKey = getDahlKey();
+        if (dKey && !hasImage) {
+            if (await tryLayer(async () => {
+                try {
+                    const t = await this.callDahl(messages, sysPrompt, dKey);
+                    const cleanT = stripProviderNoise(t);
+                    if (!cleanT.trim()) throw new Error('Empty Dahl response');
+                    interceptCallbacks.onChunk(cleanT);
+                    interceptCallbacks.onComplete?.(cleanT);
+                } catch (e: any) {
+                    cooldownDahlKey(dKey);
+                    throw e;
+                }
+            })) return;
+        }
         // 1. 🌟 THE LEGENDARY UNIVERSITY MASTER: Cohere Command R+
         const cohereKey = getCohereKey();
         if (cohereKey && !hasImage) {
