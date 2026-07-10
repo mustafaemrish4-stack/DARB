@@ -1107,26 +1107,7 @@ class AIClient {
         return text;
     }
 
-    private async callPollinationsSearch(messages: AIChatMessage[], sysPrompt: string): Promise<string> {
-        const { messages: sm, sysPrompt: ssp } = this.shrinkForPollinations(messages, sysPrompt);
-        const formattedMessages = this.buildOpenAIMessages(sm, ssp);
 
-        const res = await fetch("https://text.pollinations.ai/openai", {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                messages: formattedMessages,
-                model: "searchgpt"
-            })
-        });
-        if (!res.ok) throw new Error("Pollinations Search failed");
-        const data = await res.json();
-        let text = stripProviderNoise(data.choices?.[0]?.message?.content || "");
-        if (!text || text.length < 3) throw new Error("Pollinations returned empty");
-        return text;
-    }
 
     private async callDevToolBoxText(messages: AIChatMessage[], sysPrompt: string): Promise<string> {
         const fullPrompt = `${sysPrompt}\n\n` + messages.map(m => `${m.role}: ${m.content}`).join("\n");
@@ -1179,7 +1160,7 @@ class AIClient {
 
         // 0.0 CUSTOM BACKEND (Agent-Reach & Unlimited-OCR)
         try {
-            const res = await fetch("http://64.226.80.41:8000/api/chat", {
+            const res = await fetch("https://64-226-80-41.nip.io/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -1206,11 +1187,7 @@ class AIClient {
             }
         }
 
-        // 0.1 FREE LIVE WEB SEARCH (Pollinations searchgpt)
-        try {
-            const t = await this.callPollinationsSearch(messages, sysPrompt);
-            return stripProviderNoise(t);
-        } catch { }
+
 
         try {
             const t = await this.callPuter(messages, sysPrompt);
